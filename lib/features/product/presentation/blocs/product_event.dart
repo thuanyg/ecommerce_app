@@ -6,6 +6,12 @@ class LoadProducts extends ProductEvent {
   LoadProducts(this.limit);
 }
 
+class LoadProductByID extends ProductEvent {
+  final int id;
+
+  LoadProductByID(this.id);
+}
+
 class LoadProductsByCategory extends ProductEvent {
   final int limit;
   final String category;

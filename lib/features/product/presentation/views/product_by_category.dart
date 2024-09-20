@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/config/constant.dart';
 import 'package:ecommerce_app/features/product/data/datasource/product_datasource_impl.dart';
-import 'package:ecommerce_app/features/product/domain/repositories/product_repository_impl.dart';
+import 'package:ecommerce_app/features/product/data/repositories/product_repository_impl.dart';
 import 'package:ecommerce_app/features/product/domain/usecases/fetch_product_by_category_usecase.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product_bloc.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product_event.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product_state.dart';
 import 'package:ecommerce_app/features/product/presentation/components/back_prev.dart';
 import 'package:ecommerce_app/features/product/presentation/components/product_card.dart';
+import 'package:ecommerce_app/features/product/presentation/views/product_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -38,7 +39,7 @@ class ProductByCategory extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const BackPrevScreen(),
+              const BackPrevScreenWidget(),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Text(
@@ -71,7 +72,17 @@ class ProductByCategory extends StatelessWidget {
                             name: state.products[index].title.toString(),
                             price: '${state.products[index].price}\$',
                             imageUrl: state.products[index].image.toString(),
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (context) => const ProductDetail(),
+                                  settings: RouteSettings(
+                                    arguments: state.products[index].id ?? 1,
+                                  ),
+                                ),
+                              );
+                            },
+                            onAddToCart: (){},
                           );
                         },
                       );

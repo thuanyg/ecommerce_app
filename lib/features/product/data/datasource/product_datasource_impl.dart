@@ -30,10 +30,26 @@ class ProductDatasourceImpl extends ProductDataSource {
           "https://fakestoreapi.com/products/category/$category?limit=$limit");
 
       if (response.statusCode == 200) {
-        final List<dynamic>  data = response.data;
+        final List<dynamic> data = response.data;
         final listProducts =
             data.map((item) => ProductModel.fromJson(item)).toList();
         return listProducts;
+      }
+      throw Exception();
+    } on Exception catch (e) {
+      throw e.toString();
+    }
+  }
+
+  @override
+  Future<ProductModel> fetchProduct(int id) async {
+    try {
+      Response response =
+          await dio.get("https://fakestoreapi.com/products/$id");
+      if (response.statusCode == 200) {
+        final data = response.data;
+        final ProductModel product = ProductModel.fromJson(data);
+        return product;
       }
       throw Exception();
     } on Exception catch (e) {

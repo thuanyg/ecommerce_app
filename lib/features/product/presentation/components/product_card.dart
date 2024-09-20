@@ -5,6 +5,7 @@ class ProductCardWidget extends StatelessWidget {
   String price;
   String imageUrl;
   VoidCallback onPressed;
+  VoidCallback onAddToCart;
 
   ProductCardWidget({
     super.key,
@@ -12,6 +13,7 @@ class ProductCardWidget extends StatelessWidget {
     required this.price,
     required this.imageUrl,
     required this.onPressed,
+    required this.onAddToCart,
   });
 
   @override
@@ -22,40 +24,61 @@ class ProductCardWidget extends StatelessWidget {
       elevation: 1,
       child: InkWell(
         onTap: onPressed,
-        child: SizedBox(
-          width: 170,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 220,
-                padding: const EdgeInsets.all(24),
-                child: Center(
-                  child: Image.network(
-                    imageUrl,
-                    fit: BoxFit.cover,
+        child: Stack(
+          children: [
+            SizedBox(
+              width: 170,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 220,
+                    padding: const EdgeInsets.all(24),
+                    child: Center(
+                      child: Image.network(
+                        imageUrl,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    child: Text(
+                      name,
+                      style: const TextStyle(fontSize: 18),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 2,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Text(
+                      price,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 8,
+              right: 8,
+              child: InkWell(
+                onTap: onAddToCart,
+                borderRadius: BorderRadius.circular(100),
+                child: const CircleAvatar(
+                  radius: 18,
+                  backgroundColor: Colors.green,
+                  child: Icon(
+                    Icons.add,
+                    color: Colors.white,
                   ),
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                child: Text(
-                  name,
-                  style: const TextStyle(fontSize: 18),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                child: Text(
-                  price,
-                  style:
-                      const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ],
-          ),
+            )
+          ],
         ),
       ),
     );

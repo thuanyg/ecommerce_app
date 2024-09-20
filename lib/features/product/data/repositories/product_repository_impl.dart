@@ -55,4 +55,17 @@ class ProductRepositoryImpl extends ProductRepository {
       throw e.toString();
     }
   }
+
+  @override
+  Future<ProductEntity> fetchProduct(int id) async {
+    try {
+      final productModel = await dataSource.fetchProduct(id);
+
+      final ProductEntity product = productModel.toEntity();
+
+      return product;
+    } catch (e) {
+      throw e.toString();
+    }
+  }
 }

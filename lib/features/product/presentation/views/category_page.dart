@@ -15,7 +15,7 @@ class CategoryPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const BackPrevScreen(),
+            const BackPrevScreenWidget(),
             const Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
               child: Text(
