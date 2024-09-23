@@ -22,6 +22,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
+  static String routeName = "/HomePage";
+
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
