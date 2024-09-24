@@ -1,16 +1,36 @@
-# ecommerce_app
+# Simple eCommerce App
 
-A new Flutter project.
+A simple eCommerce application built using [Flutter](https://flutter.dev/), employing BLoC for state management and following clean architecture principles. This app allows users to browse products, add them to a cart, and complete purchases.
 
-## Getting Started
+## Table of Contents
 
-This project is a starting point for a Flutter application.
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Architecture](#architecture)
+- [Technologies](#technologies)
+- [Contributing](#contributing)
+- [License](#license)
 
-A few resources to get you started if this is your first Flutter project:
+## Features
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- User authentication (sign up, login, logout)
+- Product browsing with categories
+- Product search functionality
+- Shopping cart management
+- Order history
+- Responsive design
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Screenshots
+
+![Home Screen](assets/screenshots/home.png)
+![Product Details](assets/screenshots/product_details.png)
+![Cart Screen](assets/screenshots/cart.png)
+
+## Installation
+
+1. Clone the repository:
+
+   ```bash
+   git clone https://github.com/yourusername/simple_ecommerce_app.git
