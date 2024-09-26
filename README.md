@@ -1,7 +1,7 @@
 
 
 <div align="center" id="top"> 
-  <img src="https://github.com/rahul-badgujar/EShopee-Flutter-eCommerce-App/blob/main/assets/images/launcher_icon_with_bg.png?raw=true" alt="Flutter eCommerce App" width="150" height="150"/>
+  <img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/assets/images/logo.png" alt="Flutter eCommerce App" width="150" height="150"/>
 
 &#xa0;
 
