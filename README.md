@@ -1,14 +1,14 @@
 
 
 <div align="center" id="top"> 
-  <img src="https://github.com/rahul-badgujar/EShopee-Flutter-eCommerce-App/blob/main/assets/images/launcher_icon_with_bg.png?raw=true" alt="EShopee: Flutter eCommerce App" width="150" height="150"/>
+  <img src="https://github.com/rahul-badgujar/EShopee-Flutter-eCommerce-App/blob/main/assets/images/launcher_icon_with_bg.png?raw=true" alt="Flutter eCommerce App" width="150" height="150"/>
 
 &#xa0;
 
   <!-- <a href="https://e_commerce_app_flutter.netlify.app">Demo</a> -->
 </div>
 
-<h1 align="center">EShopee: Flutter eCommerce App</h1>
+<h1 align="center">Flutter eCommerce App</h1>
 
 <p align="center">
   <img alt="Github top language" src="https://img.shields.io/github/languages/top/rahul-badgujar/e_commerce_app_flutter?color=56BEB8">
@@ -31,7 +31,7 @@
 ## Status
 
 <h4 align="center">
-	🚧  EShopee App 🚀 Migrating to V2 (Flutter 2.0)  🚧
+	🚧  Shopee App  🚧
 </h4>
 
 <hr>
