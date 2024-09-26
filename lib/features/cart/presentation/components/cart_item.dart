@@ -1,138 +1,144 @@
+import 'package:ecommerce_app/features/cart/domain/entities/product.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
-class CartItem extends StatelessWidget {
-
-  final String title, image, size, color, price;
+class CartItem extends StatefulWidget {
+  final CartProductEntity cartItem;
+  final VoidCallback onDecrease, onIncrease, onRemove;
 
   const CartItem({
     super.key,
-    required this.size,
-    required this.title,
-    required this.image,
-    required this.color,
-    required this.price,
+    required this.cartItem,
+    required this.onDecrease,
+    required this.onIncrease,
+    required this.onRemove,
   });
 
   @override
+  State<CartItem> createState() => CartItemState();
+}
+
+class CartItemState extends State<CartItem> {
+  @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          height: 95,
-          decoration: BoxDecoration(
-            color: const Color(0xfff4f4f4),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: [
-              Padding(
-                padding:
-                const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                child: Image.network(
-                    image),
+    Size size = MediaQuery.of(context).size;
+    return Padding(
+      padding: const EdgeInsets.only(
+        top: 20,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            width: size.width * 0.18,
+            height: size.height * 0.13,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(14),
+            ),
+            child: Center(
+              child: Image.network(
+                widget.cartItem.imageUrl,
+                width: 70,
+                height: 70,
+                fit: BoxFit.contain,
               ),
-              Expanded(
-                child: Padding(
-                  padding:
-                  const EdgeInsets.symmetric(vertical: 12, horizontal: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              title,
-                              maxLines: 2,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                                overflow: TextOverflow.ellipsis
-                              ),
-                            ),
+            ),
+          ),
+          SizedBox(
+            width: size.width * 0.5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.cartItem.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.poppins(
+                    fontSize: size.width * 0.035,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * 0.005,
+                ),
+                Text(
+                  "\$${widget.cartItem.price}",
+                  style: GoogleFonts.poppins(
+                    color: Colors.black.withOpacity(0.8),
+                    fontSize: size.width * 0.035,
+                  ),
+                ),
+                SizedBox(
+                  height: size.width * 0.030,
+                ),
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: widget.onDecrease,
+                      child: Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black26,
                           ),
-                          Text(
-                            "$price\$",
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: const Icon(
+                          Icons.remove,
+                          color: Colors.black,
+                          size: 14,
+                        ),
                       ),
-                      Row(
-                        children: [
-                          RichText(
-                            text: TextSpan(
-                              text: 'Size - ',
-                              style: const TextStyle(color: Colors.black),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: size,
-                                    style:
-                                    TextStyle(fontWeight: FontWeight.bold)),
-                              ],
-                            ),
+                    ),
+                    const SizedBox(
+                      width: 13,
+                    ),
+                    Text(
+                      widget.cartItem.quantity.toString(),
+                      style: GoogleFonts.poppins(),
+                    ),
+                    const SizedBox(
+                      width: 13,
+                    ),
+                    GestureDetector(
+                      onTap: widget.onIncrease,
+                      child: Container(
+                        width: 30,
+                        height: 30,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.black26,
                           ),
-                          const SizedBox(width: 12),
-                          RichText(
-                            text: TextSpan(
-                              text: 'Color - ',
-                              style: const TextStyle(color: Colors.black),
-                              children: <TextSpan>[
-                                TextSpan(
-                                    text: color,
-                                    style:
-                                    const TextStyle(fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                          ),
-                        ],
-                      )
-                    ],
-                  ),
+                          borderRadius: BorderRadius.circular(100),
+                        ),
+                        child: const Icon(
+                          Icons.add,
+                          color: Colors.black,
+                          size: 14,
+                        ),
+                      ),
+                    )
+                  ],
                 ),
-              )
-            ],
+              ],
+            ),
           ),
-        ),
-        Positioned(
-          bottom: 8,
-          right: 8,
-          child: Row(
-            children: [
-              InkWell(
-                onTap: () {},
-                borderRadius: BorderRadius.circular(100),
-                child: const CircleAvatar(
-                  radius: 12,
-                  backgroundColor: Colors.green,
-                  child: Text(
-                    "-",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
+          GestureDetector(
+            onTap: widget.onRemove,
+            child: CircleAvatar(
+              backgroundColor: Colors.redAccent.withOpacity(0.07),
+              radius: 18,
+              child: const Icon(
+                Icons.restore_from_trash_rounded,
+                color: Colors.redAccent,
+                size: 14,
               ),
-              const SizedBox(width: 8),
-              InkWell(
-                onTap: () {},
-                borderRadius: BorderRadius.circular(100),
-                child: const CircleAvatar(
-                  radius: 12,
-                  backgroundColor: Colors.green,
-                  child: Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: 14,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        )
-      ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }

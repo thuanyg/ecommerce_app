@@ -15,7 +15,7 @@ class CategoryItemWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 100,
+      height: 80,
       margin: const EdgeInsets.only(right: 12),
       child: InkWell(
         onTap: onPressed,
@@ -24,7 +24,7 @@ class CategoryItemWidget extends StatelessWidget {
           children: [
             ClipOval(
               child: SizedBox.fromSize(
-                size: const Size.fromRadius(40), // Image radius
+                size: const Size.fromRadius(30), // Image radius
                 child: Image.asset(imageUrl),
               ),
             ),

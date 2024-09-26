@@ -1,172 +1,199 @@
-import 'package:ecommerce_app/features/product/presentation/views/home_page.dart';
-import 'package:ecommerce_app/features/user/data/models/user.dart';
-import 'package:ecommerce_app/features/user/presentation/blocs/signup/signup_bloc.dart';
-import 'package:ecommerce_app/features/user/presentation/blocs/signup/signup_event.dart';
-import 'package:ecommerce_app/features/user/presentation/blocs/signup/signup_state.dart';
-import 'package:ecommerce_app/features/user/presentation/components/button.dart';
-import 'package:ecommerce_app/features/user/presentation/components/inputfield.dart';
 import 'package:ecommerce_app/features/user/presentation/views/login_page.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SignupPage extends StatelessWidget {
-  SignupPage({super.key});
-
-  static String routeName = "/SignInPage";
-
-  final _fullNameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _rePasswordController = TextEditingController();
-  final _signUpFormKey = GlobalKey<FormState>();
+class SignupPage extends StatefulWidget {
+  static String routeName = "/SignUpPage";
+  
+  const SignupPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(backgroundColor: Colors.white),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 36),
-        child: Center(
-          child: Form(
-            key: _signUpFormKey,
-            child: Column(
-              children: [
-                const SizedBox(height: 120),
-                const Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "SIGN UP",
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontStyle: FontStyle.italic,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 23.0),
-                CustomInputField(
-                  controller: _emailController,
-                  label: "abc@email.com",
-                  prefixIconName: "assets/images/ic_email_outlined.png",
-                ),
-                const SizedBox(height: 18.0),
-                CustomInputField(
-                  controller: _passwordController,
-                  obscureText: true,
-                  label: "Your password",
-                  prefixIconName: "assets/images/ic_lock_outlined.png",
-                ),
-                const SizedBox(height: 18.0),
-                CustomInputField(
-                  controller: _rePasswordController,
-                  obscureText: true,
-                  label: "Confirm password",
-                  prefixIconName: "assets/images/ic_lock_outlined.png",
-                ),
-                const SizedBox(height: 36.0),
-                BlocBuilder<SignupBloc, SignupState>(
-                  builder: (context, state) {
-                    if(state is SignUpInitial) {
-                      return const SizedBox.shrink();
-                    }
-                    if (state is SignUpLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    if (state is SignUpError) {
-                      return Center(
-                        child: Text(state.message),
-                      );
-                    }
-                    if (state is SignUpSuccess) {
-                      // Avoid calling Navigator inside build directly
-                      WidgetsBinding.instance.addPostFrameCallback((_) {
-                        Navigator.of(context).pushNamed(LoginPage.routeName);
-                      });
-                    }
-                    return const Center(
-                      child: Text("Something went wrong!"),
-                    );
-                  },
-                ),
-                MainElevatedButton(
-                  textButton: "SIGN UP",
-                  onTap: () {
-                    handleSignUp(context);
-                  },
-                ),
-                const SizedBox(height: 24.0),
-                const Row(
-                  children: [
-                    Expanded(
-                      child: Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: Text(
-                        'OR',
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                    ),
-                    Expanded(
-                      child: Divider(
-                        color: Colors.grey,
-                        thickness: 1,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16.0),
-                Expanded(
-                  child: Align(
-                    alignment: FractionalOffset.bottomCenter,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          "Already have an account? ",
-                          style: TextStyle(
-                            fontWeight: FontWeight.w500,
-                            fontStyle: FontStyle.italic,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: () {
-                            Navigator.of(context)
-                                .pushNamed(LoginPage.routeName);
-                          },
-                          child: const Text(
-                            "Sign in",
-                            style: TextStyle(
-                              fontWeight: FontWeight.w500,
-                              color: Colors.blue,
-                              fontStyle: FontStyle.italic,
-                            ),
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+  _SignUpPageState createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends State<SignupPage> {
+
+
+  Widget _backButton() {
+    return InkWell(
+      onTap: () {
+        Navigator.pop(context);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        child: Row(
+          children: <Widget>[
+            Container(
+              padding: const EdgeInsets.only(left: 0, top: 10, bottom: 10),
+              child: const Icon(Icons.keyboard_arrow_left, color: Colors.black),
             ),
-          ),
+            const Text(
+              'Back',
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
+            )
+          ],
         ),
       ),
     );
   }
 
-  void handleSignUp(BuildContext context) {
-    String fullName = _emailController.text.trim();
-    String email = _emailController.text.trim();
-    String password = _passwordController.text.trim();
-    User user = User(email: email, password: password);
-    BlocProvider.of<SignupBloc>(context).add(PressSignUp(user));
+  Widget _entryField(String title, {bool isPassword = false}) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          TextField(
+              obscureText: isPassword,
+              decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  fillColor: Color(0xfff3f3f4),
+                  filled: true))
+        ],
+      ),
+    );
+  }
 
-    // Navigator.of(context).pushNamed(VerificationPage.routeName);
+  Widget _submitButton() {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.symmetric(vertical: 15),
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(5)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+                color: Colors.grey.shade200,
+                offset: Offset(2, 4),
+                blurRadius: 5,
+                spreadRadius: 2)
+          ],
+          gradient: LinearGradient(
+              begin: Alignment.centerLeft,
+              end: Alignment.centerRight,
+              colors: [Color(0xfffbb448), Color(0xfff7892b)])),
+      child: Text(
+        'Register Now',
+        style: TextStyle(fontSize: 20, color: Colors.white),
+      ),
+    );
+  }
+
+  Widget _loginAccountLabel() {
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const LoginPage(),
+          ),
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 20),
+        padding: const EdgeInsets.all(15),
+        alignment: Alignment.bottomCenter,
+        child: const Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text(
+              'Already have an account ?',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              'Login',
+              style: TextStyle(
+                  color: Color(0xfff79c4f),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _title() {
+    return RichText(
+      textAlign: TextAlign.center,
+      text: const TextSpan(
+          text: 'E',
+          style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.w700,
+              color: Color(0xffe46b10)),
+          children: [
+            TextSpan(
+              text: 'com',
+              style: TextStyle(color: Colors.black, fontSize: 30),
+            ),
+            TextSpan(
+              text: 'merce',
+              style: TextStyle(color: Color(0xffe46b10), fontSize: 30),
+            ),
+          ]),
+    );
+  }
+
+  Widget _emailPasswordWidget() {
+    return Column(
+      children: <Widget>[
+        _entryField("Username"),
+        _entryField("Email"),
+        _entryField("Password", isPassword: true),
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final height = MediaQuery.of(context).size.height;
+    return Scaffold(
+      body: Container(
+        height: height,
+        child: Stack(
+          children: <Widget>[
+            Positioned(
+              top: -MediaQuery.of(context).size.height * .15,
+              right: -MediaQuery.of(context).size.width * .4,
+              child: BezierContainer(),
+            ),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    SizedBox(height: height * .2),
+                    _title(),
+                    SizedBox(
+                      height: 50,
+                    ),
+                    _emailPasswordWidget(),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    _submitButton(),
+                    SizedBox(height: height * .14),
+                    _loginAccountLabel(),
+                  ],
+                ),
+              ),
+            ),
+            Positioned(top: 40, left: 0, child: _backButton()),
+          ],
+        ),
+      ),
+    );
   }
 }

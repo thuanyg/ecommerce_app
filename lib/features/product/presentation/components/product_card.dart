@@ -20,7 +20,6 @@ class ProductCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       color: const Color(0xffF4F4F4),
-      margin: const EdgeInsets.only(right: 12),
       elevation: 1,
       child: InkWell(
         onTap: onPressed,

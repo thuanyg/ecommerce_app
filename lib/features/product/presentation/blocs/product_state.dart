@@ -5,6 +5,13 @@ class ProductInitial extends ProductState {}
 
 class ProductLoading extends ProductState {}
 
+class ProductDetailLoading extends ProductState {}
+
+class ProductDetailLoaded extends ProductState {
+  final ProductEntity product;
+  ProductDetailLoaded(this.product);
+}
+
 class ProductLoaded extends ProductState {
   final List<ProductEntity> products;
 

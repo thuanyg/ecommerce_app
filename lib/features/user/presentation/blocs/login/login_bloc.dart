@@ -10,6 +10,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
   LoginBloc({required this.loginUseCase}) : super(LoginInitial()) {
     on<PressLogin>(_login);
+    on<RemoveLogin>((event, emit) => emit(LoginInitial()));
   }
 
   Future<void> _login(PressLogin event, Emitter<LoginState> emit) async {
@@ -23,7 +24,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
         emit(LoginError("Username or password incorrect."));
       }
     } catch (e) {
-      emit(LoginError("Login failed: ${e.toString()}"));  // Emit error with exception message
+      emit(LoginError(
+          "Login failed: ${e.toString()}")); // Emit error with exception message
     }
   }
 }

@@ -1,14 +1,14 @@
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/config/constant.dart';
+import 'package:ecommerce_app/core/utils/dialog.dart';
+import 'package:ecommerce_app/features/cart/data/repository/cart_repository_impl.dart';
+import 'package:ecommerce_app/features/cart/domain/entities/product.dart';
+import 'package:ecommerce_app/features/cart/domain/usecases/get_cart.dart';
 import 'package:ecommerce_app/features/cart/presentation/blocs/cart_bloc.dart';
 import 'package:ecommerce_app/features/cart/presentation/blocs/cart_event.dart';
 import 'package:ecommerce_app/features/cart/presentation/blocs/cart_state.dart';
-import 'package:ecommerce_app/features/cart/presentation/views/cart_page.dart';
-import 'package:ecommerce_app/features/product/data/datasource/product_datasource_impl.dart';
+import 'package:ecommerce_app/features/cart/presentation/views/cart_screen.dart';
 import 'package:ecommerce_app/features/product/domain/entities/product.dart';
-import 'package:ecommerce_app/features/product/domain/repositories/product_repository.dart';
-import 'package:ecommerce_app/features/product/data/repositories/product_repository_impl.dart';
-import 'package:ecommerce_app/features/product/domain/usecases/fetch_products_usecase.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product_bloc.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product_event.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product_state.dart';
@@ -17,23 +17,28 @@ import 'package:ecommerce_app/features/product/presentation/components/product_c
 import 'package:ecommerce_app/features/product/presentation/views/category_page.dart';
 import 'package:ecommerce_app/features/product/presentation/views/product_by_category.dart';
 import 'package:ecommerce_app/features/product/presentation/views/product_detail.dart';
+import 'package:ecommerce_app/features/user/presentation/views/your_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class MyHomeScreen extends StatefulWidget {
+  const MyHomeScreen({super.key});
+
   static String routeName = "/HomePage";
 
-
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<MyHomeScreen> createState() => _MyHomeScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomeScreenState extends State<MyHomeScreen>
+    with AutomaticKeepAliveClientMixin {
+  int selectedQuantity = 1; // Default quantity
+
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProductBloc>(context).add(LoadProducts(50));
+    BlocProvider.of<ProductBloc>(context).add(LoadProducts(30));
+    BlocProvider.of<CartBloc>(context).add(LoadMyCart());
   }
 
   @override
@@ -59,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     );
                   }),
               SizedBox(
-                height: 108,
+                height: 90,
                 child: ListView.builder(
                   itemCount: categories.length,
                   scrollDirection: Axis.horizontal,
@@ -83,7 +88,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               buildTitleLabel(label: "Top Selling", onSeeAll: () {}),
               SizedBox(
-                height: 310,
+                height: 330,
                 child: BlocBuilder<ProductBloc, ProductState>(
                   builder: (context, state) {
                     if (state is ProductLoading) {
@@ -91,7 +96,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     }
                     if (state is ProductLoaded) {
                       return ListView.builder(
-                        itemCount: 10,
+                        itemCount: state.products.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return ProductCardWidget(
@@ -108,10 +113,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               );
                             },
-                            onAddToCart: () {
-                              BlocProvider.of<CartBloc>(context).add(
-                                AddToCart(state.products[index]),
-                              );
+                            onAddToCart: () async {
+                              await addProductToCart(context, state.products, index);
                             },
                           );
                         },
@@ -126,35 +129,34 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               buildTitleLabel(label: "Newest Products", onSeeAll: () {}),
               SizedBox(
-                height: 310,
+                height: 330,
                 child: BlocBuilder<ProductBloc, ProductState>(
                   builder: (context, state) {
                     if (state is ProductLoading) {
                       return const Center(child: CircularProgressIndicator());
                     }
                     if (state is ProductLoaded) {
+                      var products = state.products.reversed.toList();
                       return ListView.builder(
-                        itemCount: 10,
+                        itemCount: products.length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (context, index) {
                           return ProductCardWidget(
-                            name: state.products[index].title.toString(),
-                            price: '${state.products[index].price}\$',
-                            imageUrl: state.products[index].image.toString(),
+                            name: products[index].title.toString(),
+                            price: '${products[index].price}\$',
+                            imageUrl: products[index].image.toString(),
                             onPressed: () {
                               Navigator.of(context).push(
                                 MaterialPageRoute(
                                   builder: (context) => const ProductDetail(),
                                   settings: RouteSettings(
-                                    arguments: state.products[index].id ?? 1,
+                                    arguments: products[index].id ?? 1,
                                   ),
                                 ),
                               );
                             },
-                            onAddToCart: () {
-                              BlocProvider.of<CartBloc>(context).add(
-                                AddToCart(state.products[index]),
-                              );
+                            onAddToCart: () async {
+                              await addProductToCart(context, products, index);
                             },
                           );
                         },
@@ -172,6 +174,28 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  Future<void> addProductToCart(
+      BuildContext context, List<ProductEntity> products, int index) async {
+    int? quantity = await showQuantityDialog(context);
+    if (quantity != null) {
+      CartProductEntity product = CartProductEntity(
+          id: products[index].id.toString(),
+          name: products[index].title.toString(),
+          price: products[index].price ?? 0,
+          imageUrl: products[index].image.toString(),
+          quantity: quantity);
+      BlocProvider.of<CartBloc>(context).add(
+        AddToCart(product),
+      );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Add product to cart successfully.'),
+        ),
+      );
+    }
   }
 
   Widget buildTitleLabel(
@@ -224,15 +248,21 @@ class _MyHomePageState extends State<MyHomePage> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        CircleAvatar(
-          child: Image.asset(
-            "assets/images/ic_avatar.png",
-            height: 50,
-            fit: BoxFit.fitHeight,
+        InkWell(
+          borderRadius: BorderRadius.circular(50),
+          onTap: () {
+            Navigator.of(context).pushNamed(YourProfilePage.routeName);
+          },
+          child: CircleAvatar(
+            child: Image.asset(
+              "assets/images/ic_avatar.png",
+              height: 50,
+              fit: BoxFit.fitHeight,
+            ),
           ),
         ),
         Container(
-          height: 48,
+          height: 36,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(100),
@@ -255,14 +285,15 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         InkWell(
-          onTap: () => Navigator.of(context)
-              .push(MaterialPageRoute(builder: (_) => const MyCartPage())),
+          onTap:() {
+            Navigator.of(context).pushNamed(CartScreen.routeName);
+          },
           borderRadius: BorderRadius.circular(50),
           child: Stack(
             children: [
               Container(
-                height: 48,
-                width: 48,
+                height: 43,
+                width: 43,
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.all(Radius.circular(50)),
                   color: Color(0xff8E6CEF),
@@ -274,24 +305,23 @@ class _MyHomePageState extends State<MyHomePage> {
                 right: 2,
                 child: BlocBuilder<CartBloc, CartState>(
                   builder: (context, state) {
-                    if (state is CartInitial) {
-                      return const SizedBox.shrink();
-                    }
-                    if (state is CartUpdated) {
-                      return Badge(
-                        backgroundColor: Colors.red,
-                        label: Text(state.productCount.toString()),
-                      );
-                    }
                     if (state is CartLoaded) {
+                      int totalQuantity = state.products
+                          .fold(0, (sum, element) => sum + element.quantity);
                       return Badge(
                         backgroundColor: Colors.red,
-                        label: Text(state.products.length.toString()),
+                        label: Text(totalQuantity.toString()),
                       );
                     }
-                    if (state is CartRemovedAll) {
-                      return const SizedBox.shrink();
+                    if (state is CartTotalQuantity) {
+                      return Badge(
+                        backgroundColor: Colors.red,
+                        label: Text(state.total.toString()),
+                      );
                     }
+                    // if (state is CartRemovedAll) {
+                    //   return const SizedBox.shrink();
+                    // }
                     return const SizedBox.shrink();
                   },
                 ),
@@ -302,4 +332,147 @@ class _MyHomePageState extends State<MyHomePage> {
       ],
     );
   }
+
+  Future<int?> showQuantityDialog(BuildContext context) async {
+    selectedQuantity = 1;
+    return showDialog<int>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          scrollable: true,
+          backgroundColor: Colors.white,
+          title: const Text('Select Quantity'),
+          content: StatefulBuilder(
+            builder: (context, setState) {
+              return Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(height: 16),
+                  Container(
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: const Color(0xfff4f4f4),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Size", style: TextStyle(fontSize: 16)),
+                          DropdownButton<String>(
+                            value: "S",
+                            underline: const SizedBox.shrink(),
+                            icon: Image.asset(
+                              "assets/images/ic_dropdown.png",
+                            ),
+                            items: <String>["S", 'M', 'L', 'XL', 'XXL']
+                                .map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (_) {},
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Container(
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: const Color(0xfff4f4f4),
+                      borderRadius: BorderRadius.circular(100),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Color", style: TextStyle(fontSize: 16)),
+                          DropdownButton<String>(
+                            value: "Red",
+                            underline: const SizedBox.shrink(),
+                            icon: Image.asset(
+                              "assets/images/ic_dropdown.png",
+                            ),
+                            items: <String>["Red", 'Green', 'White', 'Black']
+                                .map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
+                            onChanged: (_) {},
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Quantity',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.remove),
+                          onPressed: () {
+                            setState(() {
+                              if (selectedQuantity > 1) {
+                                selectedQuantity--;
+                              }
+                            });
+                          },
+                        ),
+                        Text(
+                          '$selectedQuantity',
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            setState(() {
+                              selectedQuantity++;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                DialogUtils.showLoadingDialog(context);
+                await Future.delayed(const Duration(seconds: 1));
+                DialogUtils.hide(context);
+
+                Navigator.of(context).pop(selectedQuantity);
+              },
+              child: const Text('Add to cart'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  bool get wantKeepAlive => true;
 }

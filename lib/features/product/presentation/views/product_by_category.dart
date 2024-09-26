@@ -20,8 +20,8 @@ class ProductByCategory extends StatelessWidget {
     String category =
         ModalRoute.of(context)?.settings.arguments as String? ?? "";
 
-    if(category == "Men") category = "men's clothing";
-    if(category == "Women") category = "women's clothing";
+    if (category == "Men") category = "men's clothing";
+    if (category == "Women") category = "women's clothing";
 
     final dio = Dio();
     final productDataSource = ProductDatasourceImpl(dio: dio);
@@ -44,7 +44,8 @@ class ProductByCategory extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Text(
                   "$category(243)",
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 20, fontWeight: FontWeight.bold),
                 ),
               ),
               Expanded(
@@ -64,7 +65,7 @@ class ProductByCategory extends StatelessWidget {
                           crossAxisCount: 2,
                           mainAxisSpacing: 10,
                           crossAxisSpacing: 2,
-                          childAspectRatio: (150.0 / 220.0),
+                          mainAxisExtent: 324,
                         ),
                         itemCount: state.products.length,
                         itemBuilder: (context, index) {
@@ -82,7 +83,7 @@ class ProductByCategory extends StatelessWidget {
                                 ),
                               );
                             },
-                            onAddToCart: (){},
+                            onAddToCart: () {},
                           );
                         },
                       );

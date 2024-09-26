@@ -1,7 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:ecommerce_app/core/utils/storage.dart';
+import 'package:ecommerce_app/features/cart/data/models/product.dart';
 import 'package:ecommerce_app/features/user/data/datasource/user_datasource.dart';
 import 'package:ecommerce_app/features/user/data/models/user.dart';
 import 'package:ecommerce_app/features/user/data/models/user_login.dart';
+import 'package:hive/hive.dart';
 
 class UserDatasourceImpl extends UserDatasource {
   final Dio dio;
@@ -29,7 +32,7 @@ class UserDatasourceImpl extends UserDatasource {
   Future<User> signUp(User user) async {
     try {
       Response response = await dio.post(
-        "https://fakestoreapi.com/users",  // Assuming the correct signup endpoint
+        "https://fakestoreapi.com/users",
         data: user.toJson(),
       );
 
@@ -39,7 +42,8 @@ class UserDatasourceImpl extends UserDatasource {
         // Map response data to User model
         return User.fromJson(data);
       } else {
-        throw Exception("Failed to sign up. Status code: ${response.statusCode}");
+        throw Exception(
+            "Failed to sign up. Status code: ${response.statusCode}");
       }
     } on DioError catch (dioError) {
       // Handle Dio-specific errors here
@@ -50,4 +54,29 @@ class UserDatasourceImpl extends UserDatasource {
     }
   }
 
+  @override
+  Future<User> getUser(int id) async {
+    try {
+      Response response = await dio.get(
+        "https://fakestoreapi.com/users/$id",
+      );
+
+      if (response.statusCode == 200) {
+        final data = response.data;
+        return User.fromJson(data);
+      } else {
+        throw Exception(
+            "Failed to get user. Status code: ${response.statusCode}");
+      }
+    } catch (e) {
+      // General exception handling
+      throw Exception("An error occurred: $e");
+    }
+  }
+
+  @override
+  Future<void> logout() async{
+    StorageUtils.remove(key: "userid");
+    Hive.box<CartProductModel>('cartBox').clear();
+  }
 }
