@@ -60,12 +60,13 @@ NOTE: This application simulates a mock buy-sell cycle, as no payment gateway ha
 ## :sparkles: Features
 
 :heavy_check_mark: User Authentification and related services\
-:heavy_check_mark: Add your Products\
-:heavy_check_mark: View products added by other users\
+:heavy_check_mark: Show Categories\
+:heavy_check_mark: View product\
 :heavy_check_mark: View products of Different Cateogories\
-:heavy_check_mark: Maintain Cart\
+:heavy_check_mark: Cart features\
 :heavy_check_mark: Mark products as your favourites\
-:heavy_check_mark: Manage your Addresses\
+:heavy_check_mark: Manage your Account\
+:heavy_check_mark: Order, Order details & History
 :heavy_check_mark: Review the products you buy
 
 ## :checkered_flag: Illustrations
@@ -92,13 +93,6 @@ Here are some Illustration of App Screens
 | :----------------------------------: | :----------------------------: | :----------------------------: |
 |        Product Review Dialog         |         Sign In Screen         |         Sign Up Screen         |
 
-| ![](illustrations/forgot_password.png) | ![](illustrations/change_display_name.png) | ![](illustrations/change_display_picture.png) |
-| :------------------------------------: | :----------------------------------------: | :-------------------------------------------: |
-|         Forgot Password Screen         |         Change Display Name Screen         |         Change Display Picture Screen         |
-
-| ![](illustrations/change_email.png) | ![](illustrations/change_password.png) | ![](illustrations/change_phone.png) |
-| :---------------------------------: | :------------------------------------: | :---------------------------------: |
-|         Change Email Screen         |         Change Password Screen         |         Change Phone Screen         |
 
 And all rest at [more screens](illustrations/)
 
@@ -111,5 +105,4 @@ The following Resources were used in this project:
 - [Flutter Community Medium](https://medium.com/flutter-community)
 - [Stack Overflow: Flutter](https://stackoverflow.com/questions/tagged/flutter)
 - [FlutterFire Official Docs](https://firebase.flutter.dev/docs/overview/)
-- [UI Inspiration](https://github.com/abuanwar072/E-commerce-Complete-Flutter-UI)
 - [Icons](https://www.flaticon.com/)
