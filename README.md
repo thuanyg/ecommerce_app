@@ -42,7 +42,7 @@
   <a href="#checkered_flag-illustrations">Illustrations</a> &#xa0; | &#xa0;
   <a href="#white_check_mark-installation">Installation</a> &#xa0; | &#xa0;
   <a href="#rocket-resources">Resources</a> &#xa0; | &#xa0;
-  <a href="https://github.com/rahul-badgujar" target="_blank">Author</a>
+  <a href="https://github.com/thuanyg" target="_blank">Author</a>
 </p>
 
 <br>
