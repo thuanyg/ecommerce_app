@@ -53,9 +53,9 @@ This is an eCommerce application developed using Flutter, following BLoC and Cle
 
 NOTE: This application simulates a mock buy-sell cycle, as no payment gateway has been integrated.
 
-| <a href="https://github.com/thuanyg/ecommerce_app" target="_blank"><img src="https://github.com/rahul-badgujar/EShopee-Flutter-eCommerce-App/blob/main/illustrations/source_code_icon.png?raw=true" width="90px"></a> | <a href="https://youtu.be/JX8Cf5qr_hE" target="_blank"><img src="https://github.com/rahul-badgujar/EShopee-Flutter-eCommerce-App/blob/main/illustrations/youtube_icon.png?raw=true" width="90px"></a> | <a href="https://drive.google.com/file/d/1b_vqGg9DN3_0vJAL6erI9n4D7xhBkL8_/view?usp=sharing" target="_blank"><img src="https://github.com/rahul-badgujar/EShopee-Flutter-eCommerce-App/blob/main/illustrations/application_icon.png?raw=true" width="90px"></a> |
+| <a href="https://github.com/thuanyg/ecommerce_app" target="_blank"><img src="https://github.com/rahul-badgujar/EShopee-Flutter-eCommerce-App/blob/main/illustrations/source_code_icon.png?raw=true" width="90px"></a> | <a href="https://drive.google.com/file/d/1b_vqGg9DN3_0vJAL6erI9n4D7xhBkL8_/view?usp=sharing" target="_blank"><img src="https://github.com/rahul-badgujar/EShopee-Flutter-eCommerce-App/blob/main/illustrations/application_icon.png?raw=true" width="90px"></a> |
 |:---:|:---:|:---:|
-|            Source Code            |            Demo Video             |            Download APK             |
+|            Source Code            |           Download APK             |
 
 ## :sparkles: Features
 
