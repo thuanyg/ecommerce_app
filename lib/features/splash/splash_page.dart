@@ -94,7 +94,7 @@ class SplashPageState extends State<SplashPage> {
     if (id == null) {
       Navigator.pushNamed(context, LoginPage.routeName);
     } else {
-      context.read<PersonalBloc>().add(PersonalLoadInformation(int.parse(id)));
+      context.read<PersonalBloc>().add(PersonalLoadInformation(id));
     }
   }
 }

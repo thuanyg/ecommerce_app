@@ -18,8 +18,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  final usernameController = TextEditingController(text: "donero");
-  final passwordController = TextEditingController(text: "ewedon");
+  final usernameController = TextEditingController(text: "thuanht1@gmail.com");
+  final passwordController = TextEditingController(text: "12345");
 
   Widget _backButton() {
     return InkWell(
@@ -59,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
             height: 10,
           ),
           TextField(
-            controller: passwordController,
+            controller: controller,
             obscureText: isPassword,
             decoration: InputDecoration(
                 border: InputBorder.none,

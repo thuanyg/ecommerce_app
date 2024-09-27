@@ -1,5 +1,5 @@
 class ProductEntity {
-  int? id;
+  String? id;
   String? title;
   double? price;
   String? description;

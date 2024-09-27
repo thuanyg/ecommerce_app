@@ -390,10 +390,9 @@ class CheckoutDialogState extends State<CheckoutDialog> {
             builder: (context, state) {
               if (state is PersonalInitial) {
                 Future.microtask(() async {
-                  String? token = await StorageUtils.getToken(key: "userid");
-                  int id = int.parse(token ?? "1");
+                  String userid = await StorageUtils.getToken(key: "userid") ?? "";
                   BlocProvider.of<PersonalBloc>(context)
-                      .add(PersonalLoadInformation(id));
+                      .add(PersonalLoadInformation(userid));
                 });
               }
               if (state is PersonalLoaded) {
@@ -502,7 +501,7 @@ class CheckoutDialogState extends State<CheckoutDialog> {
 
                   // Phone Field
                   TextFormField(
-                    controller: addressController,
+                    controller: phoneController,
                     decoration: InputDecoration(labelText: 'Phone'),
                     validator: (value) {
                       if (value == null || value.isEmpty) {
@@ -567,12 +566,8 @@ class CheckoutDialogState extends State<CheckoutDialog> {
   void paymentCheckoutAction() async {
     DialogUtils.showLoadingDialog(context);
 
-    String? token;
-    Future.microtask(() async {
-      token = await StorageUtils.getToken(key: "userid");
-    });
+    String? id = await StorageUtils.getToken(key: "userid");
 
-    int id = int.parse(token ?? "1");
     String name = nameController.text.trim();
     String address = addressController.text.trim();
     String phone = phoneController.text.trim();

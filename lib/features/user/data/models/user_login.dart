@@ -1,12 +1,12 @@
 class UserLogin {
-  String username;
+  String email;
   String password;
 
-  UserLogin({required this.username, required this.password});
+  UserLogin({required this.email, required this.password});
 
   Map<String, String> toJson(){
     return <String, String>{
-      "username": username,
+      "email": email,
       "password": password
     };
   }

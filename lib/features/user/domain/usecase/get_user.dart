@@ -4,7 +4,7 @@ import 'package:ecommerce_app/features/user/domain/repository/user_repository.da
 class GetUserUseCase {
   final UserRepository userRepo;
   GetUserUseCase(this.userRepo);
-  Future<User> call(int id) async {
+  Future<User> call(String id) async {
     return userRepo.getUser(id);
   }
 }

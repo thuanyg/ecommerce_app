@@ -15,3 +15,5 @@ class Category{
   Category(this.name, this.image);
 }
 
+String baseUrl = "https://ecommerce-api-tulp.onrender.com";
+

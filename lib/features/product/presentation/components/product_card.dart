@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 
 class ProductCardWidget extends StatelessWidget {
   String name;
@@ -26,17 +27,24 @@ class ProductCardWidget extends StatelessWidget {
         child: Stack(
           children: [
             SizedBox(
-              width: 170,
+              width: 120,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 220,
-                    padding: const EdgeInsets.all(24),
-                    child: Center(
-                      child: Image.network(
-                        imageUrl,
-                        fit: BoxFit.cover,
+                    height: 140,
+                    width: 120,
+                    padding: const EdgeInsets.all(8),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          imageUrl,
+                          height: 140,
+                          width: 200,
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
                   ),
@@ -45,9 +53,9 @@ class ProductCardWidget extends StatelessWidget {
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     child: Text(
                       name,
-                      style: const TextStyle(fontSize: 18),
+                      style: const TextStyle(fontSize: 16),
                       overflow: TextOverflow.ellipsis,
-                      maxLines: 2,
+                      maxLines: 1,
                     ),
                   ),
                   Padding(
@@ -55,20 +63,32 @@ class ProductCardWidget extends StatelessWidget {
                     child: Text(
                       price,
                       style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
+                  const Expanded(
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.star,
+                          color: Colors.yellow,
+                          size: 14,
+                        ),
+                        Text("(4.5)"),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
             Positioned(
-              bottom: 8,
+              bottom: 12,
               right: 8,
               child: InkWell(
                 onTap: onAddToCart,
                 borderRadius: BorderRadius.circular(100),
                 child: const CircleAvatar(
-                  radius: 18,
+                  radius: 12,
                   backgroundColor: Colors.green,
                   child: Icon(
                     Icons.add,

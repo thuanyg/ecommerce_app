@@ -27,7 +27,7 @@ class UserRepositoryImpl extends UserRepository {
   }
 
   @override
-  Future<User> getUser(int id) async {
+  Future<User> getUser(String id) async {
     return await userDatasourceImpl.getUser(id);
   }
 

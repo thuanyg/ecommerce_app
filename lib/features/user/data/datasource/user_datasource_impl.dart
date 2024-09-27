@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ecommerce_app/core/config/constant.dart';
 import 'package:ecommerce_app/core/utils/storage.dart';
 import 'package:ecommerce_app/features/cart/data/models/product.dart';
 import 'package:ecommerce_app/features/user/data/datasource/user_datasource.dart';
@@ -12,15 +13,15 @@ class UserDatasourceImpl extends UserDatasource {
   UserDatasourceImpl({required this.dio});
 
   @override
-  Future<String> login(String username, String password) async {
+  Future<String> login(String email, String password) async {
     try {
       Response response = await dio.post(
-        "https://fakestoreapi.com/auth/login",
-        data: UserLogin(username: username, password: password).toJson(),
+        "$baseUrl/login",
+        data: UserLogin(email: email, password: password).toJson(),
       );
       if (response.statusCode == 200) {
         final data = response.data;
-        return data["token"] ?? "";
+        return data["accessToken"] ?? "";
       }
       throw Exception();
     } on Exception catch (e) {
@@ -32,7 +33,7 @@ class UserDatasourceImpl extends UserDatasource {
   Future<User> signUp(User user) async {
     try {
       Response response = await dio.post(
-        "https://fakestoreapi.com/users",
+          "$baseUrl/signup",
         data: user.toJson(),
       );
 
@@ -55,10 +56,10 @@ class UserDatasourceImpl extends UserDatasource {
   }
 
   @override
-  Future<User> getUser(int id) async {
+  Future<User> getUser(String id) async {
     try {
       Response response = await dio.get(
-        "https://fakestoreapi.com/users/$id",
+        "$baseUrl/users/$id",
       );
 
       if (response.statusCode == 200) {

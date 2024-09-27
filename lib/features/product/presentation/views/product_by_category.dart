@@ -19,14 +19,12 @@ class ProductByCategory extends StatelessWidget {
   Widget build(BuildContext context) {
     String category =
         ModalRoute.of(context)?.settings.arguments as String? ?? "";
-
-    if (category == "Men") category = "men's clothing";
-    if (category == "Women") category = "women's clothing";
-
+    
     final dio = Dio();
     final productDataSource = ProductDatasourceImpl(dio: dio);
     final productRepo = ProductRepositoryImpl(dataSource: productDataSource);
     final fetchProductsByCategory = FetchProductsByCategory(productRepo);
+    final size = MediaQuery.of(context).size;
 
     return BlocProvider(
       create: (context) =>
@@ -43,7 +41,7 @@ class ProductByCategory extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 12),
                 child: Text(
-                  "$category(243)",
+                  "$category(100)",
                   style: const TextStyle(
                       fontSize: 20, fontWeight: FontWeight.bold),
                 ),
@@ -61,11 +59,11 @@ class ProductByCategory extends StatelessWidget {
                       return GridView.builder(
                         shrinkWrap: true,
                         gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
+                             SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           mainAxisSpacing: 10,
                           crossAxisSpacing: 2,
-                          mainAxisExtent: 324,
+                          mainAxisExtent: size.height * 0.3,
                         ),
                         itemCount: state.products.length,
                         itemBuilder: (context, index) {

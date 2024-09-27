@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class SignupPage extends StatefulWidget {
   static String routeName = "/SignUpPage";
-  
+
   const SignupPage({super.key});
 
   @override
@@ -11,7 +11,9 @@ class SignupPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignupPage> {
-
+  final emailController = TextEditingController();
+  final usernameController = TextEditingController();
+  final passwordController = TextEditingController();
 
   Widget _backButton() {
     return InkWell(
@@ -36,7 +38,7 @@ class _SignUpPageState extends State<SignupPage> {
     );
   }
 
-  Widget _entryField(String title, {bool isPassword = false}) {
+  Widget _entryField(TextEditingController controller, String title, {bool isPassword = false}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -66,19 +68,21 @@ class _SignUpPageState extends State<SignupPage> {
       padding: EdgeInsets.symmetric(vertical: 15),
       alignment: Alignment.center,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Colors.grey.shade200,
-                offset: Offset(2, 4),
-                blurRadius: 5,
-                spreadRadius: 2)
-          ],
-          gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [Color(0xfffbb448), Color(0xfff7892b)])),
-      child: Text(
+        borderRadius: BorderRadius.all(Radius.circular(5)),
+        boxShadow: <BoxShadow>[
+          BoxShadow(
+              color: Colors.grey.shade200,
+              offset: Offset(2, 4),
+              blurRadius: 5,
+              spreadRadius: 2)
+        ],
+        gradient: const LinearGradient(
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+          colors: [Color(0xfffbb448), Color(0xfff7892b)],
+        ),
+      ),
+      child: const Text(
         'Register Now',
         style: TextStyle(fontSize: 20, color: Colors.white),
       ),
@@ -147,9 +151,9 @@ class _SignUpPageState extends State<SignupPage> {
   Widget _emailPasswordWidget() {
     return Column(
       children: <Widget>[
-        _entryField("Username"),
-        _entryField("Email"),
-        _entryField("Password", isPassword: true),
+        _entryField(usernameController, "Username"),
+        _entryField(emailController, "Email"),
+        _entryField(passwordController, "Password", isPassword: true),
       ],
     );
   }
@@ -176,11 +180,11 @@ class _SignUpPageState extends State<SignupPage> {
                   children: <Widget>[
                     SizedBox(height: height * .2),
                     _title(),
-                    SizedBox(
+                    const SizedBox(
                       height: 50,
                     ),
                     _emailPasswordWidget(),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     ),
                     _submitButton(),

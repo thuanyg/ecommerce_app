@@ -29,7 +29,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       ),
       body: BlocBuilder<OrderBloc, OrderState>(
         builder: (BuildContext context, state) {
-          if (state is OrderCreated) {
+          if (state is OrderCreated || state is HistoryOrderLoaded) {
             return SingleChildScrollView(
               child: Padding(
                 padding: const EdgeInsets.all(16.0),
@@ -50,7 +50,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
               ),
             );
           }
-          return Center(
+          return const Center(
             child: Text("Error"),
           );
         },
@@ -134,11 +134,11 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Order Status',
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
-        SizedBox(height: 10),
+        const SizedBox(height: 10),
         _buildInfoRow(
           'Status',
           order.status == true ? 'Completed' : 'Pending',

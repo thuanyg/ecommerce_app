@@ -2,7 +2,7 @@ import 'package:ecommerce_app/features/cart/domain/entities/product.dart';
 
 class Order {
   List<CartProductEntity>? carts;
-  int? userID;
+  String? userID;
   String? date;
   bool? status;
   String? name;
@@ -30,7 +30,7 @@ class Order {
               .map((item) => CartProductEntity.fromJson(item))
               .toList()
           : null,
-      userID: json['userID'] as int?,
+      userID: json['userID'] as String?,
       date: json['date'] as String?,
       status: json['status'] as bool?,
       name: json['name'] as String?,

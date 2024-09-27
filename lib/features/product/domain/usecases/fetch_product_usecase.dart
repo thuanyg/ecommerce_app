@@ -6,7 +6,7 @@ class FetchProductByID {
 
   FetchProductByID(this.repository);
 
-  Future<ProductEntity> call(int id) async {
+  Future<ProductEntity> call(String id) async {
     return await repository.fetchProduct(id);
   }
 }

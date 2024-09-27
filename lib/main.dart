@@ -14,6 +14,7 @@ import 'package:ecommerce_app/features/order/data/datasource/order_datasource_im
 import 'package:ecommerce_app/features/order/data/repository/order_repository_impl.dart';
 import 'package:ecommerce_app/features/order/domain/repository/order_repository.dart';
 import 'package:ecommerce_app/features/order/domain/usecase/create_order.dart';
+import 'package:ecommerce_app/features/order/domain/usecase/history_order.dart';
 import 'package:ecommerce_app/features/order/presentation/bloc/order_bloc.dart';
 import 'package:ecommerce_app/features/product/data/datasource/product_datasource_impl.dart';
 import 'package:ecommerce_app/features/product/data/repositories/product_repository_impl.dart';
@@ -33,6 +34,7 @@ import 'package:ecommerce_app/features/user/presentation/blocs/login/login_bloc.
 import 'package:ecommerce_app/features/user/presentation/blocs/logout/logout_bloc.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/personal/personal_bloc.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/signup/signup_bloc.dart';
+import 'package:ecommerce_app/features/user/presentation/views/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
@@ -74,6 +76,7 @@ void main() async {
   final orderDataSource = OrderDatasourceImpl(dio: dio);
   final orderRepository = OrderRepositoryImpl(orderDataSource);
   final createOrder = CreateOrderUseCase(orderRepository);
+  final historyOrder = HistoryOrderUseCase(orderRepository);
 
   runApp(MultiBlocProvider(
     providers: [
@@ -109,7 +112,7 @@ void main() async {
         create: (context) => PersonalBloc(getUser),
       ),
       BlocProvider(
-        create: (context) => OrderBloc(createOrder),
+        create: (context) => OrderBloc(createOrder, historyOrder),
       ),
     ],
     child: const MyApp(),

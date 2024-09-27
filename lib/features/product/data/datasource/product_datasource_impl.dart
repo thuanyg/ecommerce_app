@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:ecommerce_app/core/config/constant.dart';
 import 'package:ecommerce_app/features/product/data/datasource/product_datasource.dart';
 import 'package:ecommerce_app/features/product/data/models/product.dart';
 
@@ -10,7 +11,7 @@ class ProductDatasourceImpl extends ProductDataSource {
   @override
   Future<List<ProductModel>> fetchProducts(int limit) async {
     Response response =
-        await dio.get("https://fakestoreapi.com/products?limit=$limit");
+        await dio.get("$baseUrl/products?_limit=$limit");
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = response.data;
@@ -27,7 +28,7 @@ class ProductDatasourceImpl extends ProductDataSource {
       String category, int limit) async {
     try {
       Response response = await dio.get(
-          "https://fakestoreapi.com/products/category/$category?limit=$limit");
+          "$baseUrl/products?category=$category&_limit=$limit");
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
@@ -42,10 +43,10 @@ class ProductDatasourceImpl extends ProductDataSource {
   }
 
   @override
-  Future<ProductModel> fetchProduct(int id) async {
+  Future<ProductModel> fetchProduct(String id) async {
     try {
       Response response =
-          await dio.get("https://fakestoreapi.com/products/$id");
+          await dio.get("$baseUrl/products/$id");
       if (response.statusCode == 200) {
         final data = response.data;
         final ProductModel product = ProductModel.fromJson(data);

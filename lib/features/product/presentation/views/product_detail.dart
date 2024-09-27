@@ -27,10 +27,10 @@ class _ProductDetailState extends State<ProductDetail> {
   @override
   Widget build(BuildContext context) {
     Future.microtask(() {
-      int id = ModalRoute
+      String id = ModalRoute
           .of(context)!
           .settings
-          .arguments as int;
+          .arguments as String;
 
       BlocProvider.of<DetailBloc>(context).add(LoadProductByID(id));
     });
@@ -77,7 +77,7 @@ class _ProductDetailState extends State<ProductDetail> {
               body: Container(
                 padding: const EdgeInsets.symmetric(
                     horizontal: 24, vertical: 16),
-                margin: const EdgeInsets.only(top: 64),
+                margin: const EdgeInsets.only(top: 64, bottom: 100),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -120,17 +120,19 @@ class _ProductDetailState extends State<ProductDetail> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              "Men's Harrington Jacket",
-                              style: TextStyle(fontWeight: FontWeight.bold,
-                                  fontSize: 20),
+                            Text(
+                              state.product.title.toString(),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,),
                             ),
                             const SizedBox(height: 8),
-                            const Text(
-                              "\$100",
-                              style: TextStyle(fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                  color: Color(0xff_8E_6C_EF)),
+                            Text(
+                              "\$${state.product.price.toString()}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Color(0xff_8E_6C_EF),),
                             ),
                             const SizedBox(height: 16),
                             Container(
@@ -215,9 +217,9 @@ class _ProductDetailState extends State<ProductDetail> {
                               ),
                             ),
                             const SizedBox(height: 16),
-                            const Text(
-                              "Built for life and made to last, this full-zip corduroy jacket is part of our Nike Life collection. The spacious fit gives you plenty of room to layer underneath, while the soft corduroy keeps it casual and timeless.",
-                              style: TextStyle(
+                            Text(
+                              state.product.description.toString(),
+                              style: const TextStyle(
                                 fontSize: 14, color: Color(0xff272727),
                               ),
                               textAlign: TextAlign.justify,
@@ -398,6 +400,7 @@ class _ProductDetailState extends State<ProductDetail> {
   Future<void> addProductToCart(BuildContext context,
       ProductEntity products) async {
     int? quantity = await showQuantityDialog(context);
+
     if (quantity != null) {
       CartProductEntity product = CartProductEntity(
           id: products.id.toString(),

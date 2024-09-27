@@ -20,6 +20,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
 
       if (token.isNotEmpty) {
         emit(LoginSuccess(token));
+        print(token);
       } else {
         emit(LoginError("Username or password incorrect."));
       }

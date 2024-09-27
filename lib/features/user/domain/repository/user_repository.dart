@@ -5,7 +5,7 @@ abstract class UserRepository {
 
   Future<User> signUp(User user);
 
-  Future<User> getUser(int id);
+  Future<User> getUser(String id);
 
   Future<void> logout();
 }

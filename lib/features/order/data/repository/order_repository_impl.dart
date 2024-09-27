@@ -16,20 +16,20 @@ class OrderRepositoryImpl extends OrderRepository{
   }
 
   @override
-  Future<Order> fetchOrder(int id) {
+  Future<Order> fetchOrder(String id) {
     // TODO: implement fetchOrder
     throw UnimplementedError();
   }
 
-  @override
-  Future<List<Order>> fetchOrders() {
-    // TODO: implement fetchOrders
-    throw UnimplementedError();
-  }
 
   @override
   Future<List<Order>> fetchProductsByCategory(String category, int limit) {
     // TODO: implement fetchProductsByCategory
     throw UnimplementedError();
+  }
+
+  @override
+  Future<List<Order>> fetchOrders(String userID)  async {
+    return await dataSource.fetchOrders(userID);
   }
 }

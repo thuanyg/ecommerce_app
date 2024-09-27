@@ -1,7 +1,7 @@
 abstract class DetailEvent {}
 
 class LoadProductByID extends DetailEvent {
-  final int id;
+  final String id;
 
   LoadProductByID(this.id);
 }

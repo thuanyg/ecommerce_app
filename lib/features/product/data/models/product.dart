@@ -1,7 +1,7 @@
 import 'package:ecommerce_app/features/product/domain/entities/product.dart';
 
 class ProductModel {
-  int? id;
+  String? id;
   String? title;
   double? price;
   String? description;

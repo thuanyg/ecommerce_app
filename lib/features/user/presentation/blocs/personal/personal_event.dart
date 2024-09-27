@@ -1,5 +1,5 @@
 abstract class PersonalEvent {}
 class PersonalLoadInformation extends PersonalEvent{
-  int id;
+  String id;
   PersonalLoadInformation(this.id);
 }

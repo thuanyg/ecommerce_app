@@ -37,7 +37,7 @@ class _MyHomeScreenState extends State<MyHomeScreen>
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProductBloc>(context).add(LoadProducts(30));
+    BlocProvider.of<ProductBloc>(context).add(LoadProducts(10));
     BlocProvider.of<CartBloc>(context).add(LoadMyCart());
   }
 
@@ -88,7 +88,7 @@ class _MyHomeScreenState extends State<MyHomeScreen>
               ),
               buildTitleLabel(label: "Top Selling", onSeeAll: () {}),
               SizedBox(
-                height: 330,
+                height: 225,
                 child: BlocBuilder<ProductBloc, ProductState>(
                   builder: (context, state) {
                     if (state is ProductLoading) {
@@ -129,7 +129,7 @@ class _MyHomeScreenState extends State<MyHomeScreen>
               ),
               buildTitleLabel(label: "Newest Products", onSeeAll: () {}),
               SizedBox(
-                height: 330,
+                height: 225,
                 child: BlocBuilder<ProductBloc, ProductState>(
                   builder: (context, state) {
                     if (state is ProductLoading) {
