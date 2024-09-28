@@ -42,7 +42,7 @@
   <a href="#checkered_flag-illustrations">Illustrations</a> &#xa0; | &#xa0;
   <a href="#white_check_mark-installation">Installation</a> &#xa0; | &#xa0;
   <a href="#rocket-resources">Resources</a> &#xa0; | &#xa0;
-  <a href="https://github.com/rahul-badgujar" target="_blank">Author</a>
+  <a href="https://github.com/thuanyg" target="_blank">Author</a>
 </p>
 
 <br>
@@ -52,10 +52,6 @@
 This is an eCommerce application developed using Flutter, following BLoC and Clean Architecture principles to ensure maintainability and scalability. I have incorporated all the essential features typical of any eCommerce app into this application, with illustrations included in the repository. The Flutter framework is used for both the app frontend and backend, while Hive is utilized for local data storage to enhance performance and user experience. You can try out the APK provided in the Installation section!
 
 NOTE: This application simulates a mock buy-sell cycle, as no payment gateway has been integrated.
-
-| <a href="https://github.com/thuanyg/ecommerce_app" target="_blank"><img src="https://github.com/rahul-badgujar/EShopee-Flutter-eCommerce-App/blob/main/illustrations/source_code_icon.png?raw=true" width="90px"></a> | <a href="https://youtu.be/JX8Cf5qr_hE" target="_blank"><img src="https://github.com/rahul-badgujar/EShopee-Flutter-eCommerce-App/blob/main/illustrations/youtube_icon.png?raw=true" width="90px"></a> | <a href="https://drive.google.com/file/d/1b_vqGg9DN3_0vJAL6erI9n4D7xhBkL8_/view?usp=sharing" target="_blank"><img src="https://github.com/rahul-badgujar/EShopee-Flutter-eCommerce-App/blob/main/illustrations/application_icon.png?raw=true" width="90px"></a> |
-|:---:|:---:|:---:|
-|            Source Code            |            Demo Video             |            Download APK             |
 
 ## :sparkles: Features
 
