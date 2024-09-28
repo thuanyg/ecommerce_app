@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/utils/image_helper.dart';
 import 'package:ecommerce_app/features/cart/domain/entities/product.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,7 +38,7 @@ class CartItemState extends State<CartItem> {
               borderRadius: BorderRadius.circular(14),
             ),
             child: Center(
-              child: Image.network(
+              child: ImageHelper.loadNetworkImage(
                 widget.cartItem.imageUrl,
                 width: 70,
                 height: 70,

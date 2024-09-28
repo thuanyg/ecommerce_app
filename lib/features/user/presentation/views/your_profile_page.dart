@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/utils/image_helper.dart';
 import 'package:ecommerce_app/core/utils/storage.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/personal/personal_bloc.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/personal/personal_event.dart';
@@ -67,7 +68,7 @@ class YourProfilePage extends StatelessWidget {
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(120),
-                    child: Image.network(
+                    child: ImageHelper.loadNetworkImage(
                       'https://picsum.photos/seed/picsum/200/300',
                       fit: BoxFit.cover,
                       width: 80,

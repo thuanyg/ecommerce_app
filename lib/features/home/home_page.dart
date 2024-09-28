@@ -1,8 +1,14 @@
+import 'package:ecommerce_app/core/config/colors.dart';
+import 'package:ecommerce_app/core/config/constant.dart';
 import 'package:ecommerce_app/features/cart/presentation/views/cart_screen.dart';
+import 'package:ecommerce_app/features/category/category_screen.dart';
 import 'package:ecommerce_app/features/home/page_bloc.dart';
 import 'package:ecommerce_app/features/order/presentation/views/order_history_page.dart';
+import 'package:ecommerce_app/features/product/presentation/blocs/product_category/product_category_bloc.dart';
+import 'package:ecommerce_app/features/product/presentation/blocs/product_category/product_category_event.dart';
 import 'package:ecommerce_app/features/product/presentation/views/home_page.dart';
 import 'package:ecommerce_app/features/user/presentation/views/profile_page.dart';
+import 'package:ecommerce_app/features/wishlist/wishlist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,8 +17,6 @@ class HomePage extends StatelessWidget {
 
   static String routeName = "/HomePage";
   final pageController = PageController(initialPage: 0);
-
-  int currentIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -27,9 +31,10 @@ class HomePage extends StatelessWidget {
               physics: const NeverScrollableScrollPhysics(),
               children: [
                 const MyHomeScreen(),
+                CategoryScreen(),
                 const CartScreen(),
-                OrderHistoryPage(),
-                const ProfilePage(),
+                const WishlistScreen(),
+                ProfilePage(),
               ],
               onPageChanged: (index) {
                 pageBloc.changePage(index);
@@ -48,28 +53,39 @@ class HomePage extends StatelessWidget {
               showUnselectedLabels: true,
               currentIndex: currentIndex,
               onTap: (index) {
-                pageBloc.changePage(index);
+                if (currentIndex == index) {
+                  switch (index) {
+                    case 0:
+                      print("Refresh Home");
+                    case 1:
+                      BlocProvider.of<ProductCategoryBloc>(context).add(
+                        ResetProductCategory(),
+                      );
+                    case 2:
+                      print("Refresh My Cart");
+                    case 3:
+                      print("Refresh Wishlist");
+                  }
+                } else {
+                  pageBloc.changePage(index);
+                }
               },
-              unselectedItemColor: Colors.black54,
-              selectedItemColor: Colors.deepOrange,
-              items: const [
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.home),
-                  label: 'Home',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.shopping_cart),
-                  label: 'Cart',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.receipt),
-                  label: 'Order',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Profile',
-                ),
-              ],
+              unselectedItemColor: AppColors.disableColor,
+              selectedItemColor: AppColors.enableColor,
+              items: List.generate(
+                navigationBarItems.length,
+                (index) {
+                  return BottomNavigationBarItem(
+                    icon: Image.asset(navigationBarItems[index].image),
+                    activeIcon: Image.asset(
+                      navigationBarItems[index].image,
+                      color: AppColors.enableColor,
+                    ),
+                    label: navigationBarItems[index].label,
+                    backgroundColor: Colors.white,
+                  );
+                },
+              ).toList(),
             );
           },
         ),

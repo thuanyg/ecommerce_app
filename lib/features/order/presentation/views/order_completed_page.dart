@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/config/colors.dart';
 import 'package:ecommerce_app/core/utils/dialog.dart';
 import 'package:ecommerce_app/features/cart/presentation/blocs/cart_bloc.dart';
 import 'package:ecommerce_app/features/order/presentation/bloc/order_bloc.dart';
@@ -19,13 +20,13 @@ class OrderCompletePage extends StatelessWidget {
         children: [
           // Background gradient
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Colors.green.shade300,
-                  Colors.green.shade800,
+                  AppColors.enableColor,
+                  Colors.deepPurple,
                 ],
               ),
             ),
@@ -126,7 +127,7 @@ class OrderCompletePage extends StatelessWidget {
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),
-                          backgroundColor: Colors.greenAccent.shade700,
+                          backgroundColor: AppColors.enableColor,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
                           ),

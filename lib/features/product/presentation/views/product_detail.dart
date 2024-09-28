@@ -1,21 +1,21 @@
 import 'package:dio/dio.dart';
+import 'package:ecommerce_app/core/config/colors.dart';
+import 'package:ecommerce_app/core/config/constant.dart';
+import 'package:ecommerce_app/core/utils/functions.dart';
 import 'package:ecommerce_app/features/cart/domain/entities/product.dart';
 import 'package:ecommerce_app/features/cart/presentation/blocs/cart_bloc.dart';
 import 'package:ecommerce_app/features/cart/presentation/blocs/cart_event.dart';
-import 'package:ecommerce_app/features/product/data/datasource/product_datasource.dart';
-import 'package:ecommerce_app/features/product/data/datasource/product_datasource_impl.dart';
-import 'package:ecommerce_app/features/product/data/repositories/product_repository_impl.dart';
 import 'package:ecommerce_app/features/product/domain/entities/product.dart';
-import 'package:ecommerce_app/features/product/domain/usecases/fetch_product_usecase.dart';
-import 'package:ecommerce_app/features/product/presentation/blocs/detail_bloc.dart';
-import 'package:ecommerce_app/features/product/presentation/blocs/detail_event.dart';
-import 'package:ecommerce_app/features/product/presentation/blocs/detail_state.dart';
-import 'package:ecommerce_app/features/product/presentation/components/back_prev.dart';
-import 'package:ecommerce_app/features/product/presentation/components/favorite.dart';
+import 'package:ecommerce_app/features/product/presentation/blocs/detail/detail_bloc.dart';
+import 'package:ecommerce_app/features/product/presentation/blocs/detail/detail_event.dart';
+import 'package:ecommerce_app/features/product/presentation/blocs/detail/detail_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 
 class ProductDetail extends StatefulWidget {
+  static String routeName = "/ProductDetail";
+
   const ProductDetail({super.key});
 
   @override
@@ -25,398 +25,326 @@ class ProductDetail extends StatefulWidget {
 class _ProductDetailState extends State<ProductDetail> {
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     Future.microtask(() {
-      String id = ModalRoute
-          .of(context)!
-          .settings
-          .arguments as String;
+      String id = ModalRoute.of(context)!.settings.arguments as String;
 
       BlocProvider.of<DetailBloc>(context).add(LoadProductByID(id));
     });
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: buildAppBar(),
       body: BlocBuilder<DetailBloc, DetailState>(
         builder: (context, state) {
           if (state is ProductDetailLoading) {
-            return Container(
-              height: MediaQuery
-                  .of(context)
-                  .size
-                  .height / 2,
-              child: const Center(
-                child: CircularProgressIndicator(),),);
-          }
-
-          if (state is ProductDetailLoaded) {
-            return Scaffold(
-              floatingActionButtonLocation: FloatingActionButtonLocation
-                  .centerFloat,
-              floatingActionButton: ElevatedButton(
-                style: ButtonStyle(
-                    fixedSize: WidgetStatePropertyAll(
-                      Size(MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.85, 64),
-                    ),
-                    backgroundColor: const WidgetStatePropertyAll(
-                        Color(0xff8E6CEF))),
-                onPressed: () {
-                  addProductToCart(context, state.product);
-                },
-                child: const Text(
-                  "Add to cart",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-              body: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 24, vertical: 16),
-                margin: const EdgeInsets.only(top: 64, bottom: 100),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        BackPrevScreenWidget(),
-                        FavoriteWidget(),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            SizedBox(
-                              height: 260,
-                              child: ListView.builder(
-                                itemCount: 3,
-                                scrollDirection: Axis.horizontal,
-                                itemBuilder: (context, index) {
-                                  return Container(
-                                    height: 248,
-                                    width: 161,
-                                    decoration: BoxDecoration(
-                                        color: const Color(0xfff4f4f4),
-                                        border: Border.all(
-                                            color: Colors.grey, width: .3)),
-                                    padding: const EdgeInsets.all(8),
-                                    margin: const EdgeInsets.only(right: 12),
-                                    child: Image.network(
-                                      state.product.image.toString(),
-                                      height: 248,
-                                      width: 161,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              state.product.title.toString(),
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              "\$${state.product.price.toString()}",
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Color(0xff_8E_6C_EF),),
-                            ),
-                            const SizedBox(height: 16),
-                            Container(
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: const Color(0xfff4f4f4),
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .spaceBetween,
-                                  children: [
-                                    const Text(
-                                        "Size", style: TextStyle(fontSize: 16)),
-                                    DropdownButton<String>(
-                                      value: "S",
-                                      underline: const SizedBox.shrink(),
-                                      icon: Image.asset(
-                                        "assets/images/ic_dropdown.png",
-                                      ),
-                                      items: <String>[
-                                        "S",
-                                        'M',
-                                        'L',
-                                        'XL',
-                                        'XXL'
-                                      ]
-                                          .map((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                      onChanged: (_) {},
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Container(
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: const Color(0xfff4f4f4),
-                                borderRadius: BorderRadius.circular(100),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 20),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment
-                                      .spaceBetween,
-                                  children: [
-                                    const Text(
-                                        "Color",
-                                        style: TextStyle(fontSize: 16)),
-                                    DropdownButton<String>(
-                                      value: "Red",
-                                      underline: const SizedBox.shrink(),
-                                      icon: Image.asset(
-                                        "assets/images/ic_dropdown.png",
-                                      ),
-                                      items: <String>[
-                                        "Red",
-                                        'Green',
-                                        'White',
-                                        'Black'
-                                      ]
-                                          .map((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                      onChanged: (_) {},
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            Text(
-                              state.product.description.toString(),
-                              style: const TextStyle(
-                                fontSize: 14, color: Color(0xff272727),
-                              ),
-                              textAlign: TextAlign.justify,
-                            ),
-                            const SizedBox(height: 16),
-                            const Text(
-                              "Shipping & Returns",
-                              style: TextStyle(fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                            const SizedBox(height: 8),
-                            const Text(
-                              "Free standard shipping and free 60-day returns",
-                              style: TextStyle(
-                                fontSize: 14, color: Color(0xff272727),
-                              ),
-                              textAlign: TextAlign.justify,
-                            ),
-                            const SizedBox(height: 16),
-                            const Text(
-                              "Reviews",
-                              style: TextStyle(fontWeight: FontWeight.bold,
-                                  fontSize: 20),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+            return Center(
+              child: Lottie.asset(
+                "assets/animations/loading.json",
+                width: 90,
               ),
             );
           }
 
-          return const Center(child: Text('No products available'));
+          if (state is ProductDetailLoadFailed) {
+            return Center(
+              child: Text(state.message),
+            );
+          }
+
+          if (state is ProductDetailLoaded) {
+            return Column(
+              children: [
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 260,
+                          width: MediaQuery.of(context).size.width,
+                          child: Image.asset(
+                            "assets/images/img_detail_product.png",
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 18),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        const SizedBox(height: 16),
+                                        Text(
+                                          state.product.title.toString(),
+                                          style: const TextStyle(
+                                            fontSize: 22,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                          maxLines: 2,
+                                        ),
+                                        Text(
+                                          "\$${state.product.price?.toStringAsFixed(2)}",
+                                          style: const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.black54,
+                                            fontWeight: FontWeight.bold
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {},
+                                    borderRadius: BorderRadius.circular(50),
+                                    child: Container(
+                                      padding: const EdgeInsets.all(6),
+                                      decoration: const BoxDecoration(
+                                        shape: BoxShape.circle,
+                                        color: Color(0x74ABABAB),
+                                      ),
+                                      child: const Icon(
+                                        Icons.favorite_border_outlined,
+                                        color: Colors.black12,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              const SizedBox(height: 6),
+                              const Text(
+                                "Choose the color",
+                                style: TextStyle(
+                                  color: Color(0xff939393),
+                                ),
+                              ),
+                              const SizedBox(height: 3),
+                              buildChooseColor(context),
+                              const SizedBox(height: 10),
+                              buildSeller(),
+                              const SizedBox(height: 10),
+                              const Text(
+                                "Description of product",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              Text(
+                                state.product.description.toString(),
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  color: Colors.white,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2 - 24,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            showBottomSheetAddToCart(context, state.product);
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: const WidgetStatePropertyAll(
+                                AppColors.enableColor),
+                            shape: WidgetStatePropertyAll(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                            ),
+                          ),
+                          child: const Text(
+                            "Add to cart",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width / 2 - 24,
+                        child: OutlinedButton(
+                          onPressed: () {},
+                          style: ButtonStyle(
+                              backgroundColor: const WidgetStatePropertyAll(
+                                Color(0xffF0F2F1),
+                              ),
+                              shape: WidgetStatePropertyAll(
+                                RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                              side: const WidgetStatePropertyAll(
+                                BorderSide(
+                                  color: Color(0xffD9D9D9),
+                                ),
+                              )),
+                          child: const Text(
+                            "Buy Now",
+                            style: TextStyle(color: Colors.black),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            );
+          }
+
+          return Center(
+            child: Lottie.asset(
+              "assets/animations/loading.png",
+              width: 90,
+            ),
+          );
         },
       ),
     );
   }
 
-  int selectedQuantity = 1;
-
-  Future<int?> showQuantityDialog(BuildContext context) async {
-    return showDialog<int>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          scrollable: true,
-          backgroundColor: Colors.white,
-          title: const Text('Select Quantity'),
-          content: StatefulBuilder(
-            builder: (context, setState) {
-              return Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const SizedBox(height: 16),
-                  Container(
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: const Color(0xfff4f4f4),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Size", style: TextStyle(fontSize: 16)),
-                          DropdownButton<String>(
-                            value: "S",
-                            underline: const SizedBox.shrink(),
-                            icon: Image.asset(
-                              "assets/images/ic_dropdown.png",
-                            ),
-                            items: <String>["S", 'M', 'L', 'XL', 'XXL']
-                                .map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (_) {},
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Container(
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: const Color(0xfff4f4f4),
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text("Color", style: TextStyle(fontSize: 16)),
-                          DropdownButton<String>(
-                            value: "Red",
-                            underline: const SizedBox.shrink(),
-                            icon: Image.asset(
-                              "assets/images/ic_dropdown.png",
-                            ),
-                            items: <String>["Red", 'Green', 'White', 'Black']
-                                .map((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
-                            onChanged: (_) {},
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Quantity',
-                          style: TextStyle(fontSize: 16),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.remove),
-                          onPressed: () {
-                            setState(() {
-                              if (selectedQuantity > 1) {
-                                selectedQuantity--;
-                              }
-                            });
-                          },
-                        ),
-                        Text(
-                          '$selectedQuantity',
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.add),
-                          onPressed: () {
-                            setState(() {
-                              selectedQuantity++;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              );
-            },
+  Widget buildSeller() {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      decoration: const BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            color: Color(0xffF0F2F1),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(selectedQuantity);
-              },
-              child: const Text('Cancel'),
+          bottom: BorderSide(
+            color: Color(0xffF0F2F1),
+          ),
+        ),
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            child: Image.asset("assets/images/ic_apple.png"),
+          ),
+          const SizedBox(width: 8),
+          const Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Quick Mart",
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+                Text(
+                  "online 12 mins ago",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Color(0xff939393),
+                  ),
+                ),
+              ],
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(selectedQuantity);
-              },
-              child: const Text('Add to cart'),
+          ),
+          SizedBox(
+            height: 30,
+            child: OutlinedButton(
+              onPressed: () {},
+              style: ButtonStyle(
+                shape: MaterialStatePropertyAll(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+                side: const MaterialStatePropertyAll(
+                  BorderSide(
+                    color: Color(0xffD9D9D9),
+                  ),
+                ),
+              ),
+              child: const Text("Follow"),
             ),
-          ],
-        );
-      },
+          )
+        ],
+      ),
     );
   }
 
-  Future<void> addProductToCart(BuildContext context,
-      ProductEntity products) async {
-    int? quantity = await showQuantityDialog(context);
+  Row buildChooseColor(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: List.generate(
+        5,
+        (index) {
+          return InkWell(
+            onTap: () {},
+            borderRadius: BorderRadius.circular(8),
+            child: Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.white,
+              ),
+              child: Container(
+                height: 40,
+                width: MediaQuery.of(context).size.width / 5 - 18,
+                decoration: BoxDecoration(
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.circular(8),
+                  color: colorsProduct[index],
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
 
-    if (quantity != null) {
-      CartProductEntity product = CartProductEntity(
-          id: products.id.toString(),
-          name: products.title.toString(),
-          price: products.price ?? 0,
-          imageUrl: products.image.toString(),
-          quantity: quantity);
-      BlocProvider.of<CartBloc>(context).add(
-        AddToCart(product),
-      );
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Add product to cart successfully.'),
-        ),
-      );
-    }
+  AppBar buildAppBar() {
+    return AppBar(
+      backgroundColor: Colors.white,
+      elevation: 0,
+      automaticallyImplyLeading: true,
+      title: const Text("Details product"),
+      centerTitle: true,
+      actions: [
+        Stack(
+          children: [
+            IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.shopping_cart_outlined),
+            ),
+            const Positioned(
+              top: 8,
+              right: 8,
+              child: Badge(
+                label: Text("1"),
+                isLabelVisible: true,
+              ),
+            ),
+          ],
+        )
+      ],
+    );
   }
 }

@@ -1,3 +1,4 @@
+import 'package:ecommerce_app/core/config/colors.dart';
 import 'package:ecommerce_app/core/utils/dialog.dart';
 import 'package:ecommerce_app/core/utils/storage.dart';
 import 'package:ecommerce_app/features/cart/domain/entities/product.dart';
@@ -311,7 +312,7 @@ class _CartScreenState extends State<CartScreen> {
                                 child: ElevatedButton(
                                   onPressed: checkout,
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.orangeAccent,
+                                    backgroundColor: AppColors.enableColor,
                                     elevation: 0,
                                     shape: RoundedRectangleBorder(
                                       side: BorderSide.none,
@@ -328,7 +329,8 @@ class _CartScreenState extends State<CartScreen> {
                                     ),
                                   ),
                                 ),
-                              )
+                              ),
+                              const SizedBox(height: 8),
                             ],
                           ))
                         ],
@@ -390,7 +392,8 @@ class CheckoutDialogState extends State<CheckoutDialog> {
             builder: (context, state) {
               if (state is PersonalInitial) {
                 Future.microtask(() async {
-                  String userid = await StorageUtils.getToken(key: "userid") ?? "";
+                  String userid =
+                      await StorageUtils.getToken(key: "userid") ?? "";
                   BlocProvider.of<PersonalBloc>(context)
                       .add(PersonalLoadInformation(userid));
                 });
@@ -428,8 +431,7 @@ class CheckoutDialogState extends State<CheckoutDialog> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 10),
-
+                    const SizedBox(height: 10),
                     // Phone Field
                     TextFormField(
                       controller: phoneController,

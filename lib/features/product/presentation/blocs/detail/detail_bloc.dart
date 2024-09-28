@@ -2,15 +2,13 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:ecommerce_app/features/product/domain/usecases/fetch_product_usecase.dart';
-import 'package:ecommerce_app/features/product/presentation/blocs/detail_event.dart';
-import 'package:ecommerce_app/features/product/presentation/blocs/detail_state.dart';
+import 'package:ecommerce_app/features/product/presentation/blocs/detail/detail_event.dart';
+import 'package:ecommerce_app/features/product/presentation/blocs/detail/detail_state.dart';
 
 class DetailBloc extends Bloc<DetailEvent, DetailState> {
   final FetchProductByID fetchProductByID;
 
-  DetailBloc(
-      {required this.fetchProductByID})
-      : super(DetailInitial()) {
+  DetailBloc({required this.fetchProductByID}) : super(DetailInitial()) {
     on<LoadProductByID>(_onLoadProductDetail);
   }
 
@@ -20,9 +18,17 @@ class DetailBloc extends Bloc<DetailEvent, DetailState> {
       emit(ProductDetailLoading());
       try {
         final product = await fetchProductByID(event.id);
-        emit(ProductDetailLoaded(product));
+        if (product.id == null) {
+          emit(
+            ProductDetailLoadFailed("Product Empty"),
+          );
+        } else {
+          emit(ProductDetailLoaded(product));
+        }
       } catch (e) {
-        throw e.toString();
+        emit(
+          ProductDetailLoadFailed("Something went wrong. Please try again!"),
+        );
       }
     }
   }

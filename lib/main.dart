@@ -21,8 +21,9 @@ import 'package:ecommerce_app/features/product/data/repositories/product_reposit
 import 'package:ecommerce_app/features/product/domain/usecases/fetch_product_by_category_usecase.dart';
 import 'package:ecommerce_app/features/product/domain/usecases/fetch_product_usecase.dart';
 import 'package:ecommerce_app/features/product/domain/usecases/fetch_products_usecase.dart';
-import 'package:ecommerce_app/features/product/presentation/blocs/detail_bloc.dart';
-import 'package:ecommerce_app/features/product/presentation/blocs/product_bloc.dart';
+import 'package:ecommerce_app/features/product/presentation/blocs/detail/detail_bloc.dart';
+import 'package:ecommerce_app/features/product/presentation/blocs/product/product_bloc.dart';
+import 'package:ecommerce_app/features/product/presentation/blocs/product_category/product_category_bloc.dart';
 import 'package:ecommerce_app/features/splash/splash_page.dart';
 import 'package:ecommerce_app/features/user/data/datasource/user_datasource_impl.dart';
 import 'package:ecommerce_app/features/user/data/repository/user_repository_impl.dart';
@@ -83,8 +84,10 @@ void main() async {
       BlocProvider<ProductBloc>(
         create: (context) => ProductBloc(
           fetchProducts: fetchProducts,
-          fetchProductsByCategory: fetchProductsByCategory,
         ),
+      ),
+      BlocProvider<ProductCategoryBloc>(
+        create: (context) => ProductCategoryBloc(fetchProductsByCategory),
       ),
       BlocProvider(
         create: (context) => DetailBloc(

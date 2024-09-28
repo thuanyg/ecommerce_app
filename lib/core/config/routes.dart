@@ -3,7 +3,7 @@ import 'package:ecommerce_app/features/home/home_page.dart';
 import 'package:ecommerce_app/features/order/presentation/views/order_completed_page.dart';
 import 'package:ecommerce_app/features/order/presentation/views/order_detail_page.dart';
 import 'package:ecommerce_app/features/order/presentation/views/order_history_page.dart';
-import 'package:ecommerce_app/features/product/presentation/views/home_page.dart';
+import 'package:ecommerce_app/features/product/presentation/views/product_detail.dart';
 import 'package:ecommerce_app/features/splash/splash_page.dart';
 import 'package:ecommerce_app/features/user/presentation/views/login_page.dart';
 import 'package:ecommerce_app/features/user/presentation/views/profile_page.dart';
@@ -16,9 +16,10 @@ class Routes {
     LoginPage.routeName: (_) => const LoginPage(),
     SignupPage.routeName: (_) => const SignupPage(),
     HomePage.routeName: (_) => HomePage(),
-    ProfilePage.routeName: (_) => const ProfilePage(),
+    ProfilePage.routeName: (_) => ProfilePage(),
     YourProfilePage.routeName: (_) => const YourProfilePage(),
     SplashPage.routeName: (_) => const SplashPage(),
+    ProductDetail.routeName: (_) => const ProductDetail(),
     OrderCompletePage.routeName: (_) => const OrderCompletePage(),
     CartScreen.routeName: (_) => const CartScreen(),
     OrderDetailPage.routeName: (_) => OrderDetailPage(),

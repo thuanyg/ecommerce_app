@@ -1,8 +1,9 @@
+import 'package:ecommerce_app/core/utils/image_helper.dart';
 import 'package:ecommerce_app/features/cart/domain/entities/product.dart';
 import 'package:ecommerce_app/features/order/data/model/order.dart';
 import 'package:ecommerce_app/features/order/presentation/bloc/order_bloc.dart';
 import 'package:ecommerce_app/features/order/presentation/bloc/order_state.dart';
-import 'package:ecommerce_app/features/product/presentation/blocs/detail_state.dart';
+import 'package:ecommerce_app/features/product/presentation/blocs/detail/detail_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -167,16 +168,22 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
       color: Colors.grey.shade500,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: ListTile(
-        leading: Image.network(product.imageUrl, width: 50, height: 50),
+        leading: ImageHelper.loadNetworkImage(
+          product.imageUrl,
+          width: 50,
+          height: 50,
+        ),
         title: Text(
           product.name,
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style:
+              const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         subtitle: Text('SL: ${product.quantity}',
             style: const TextStyle(color: Colors.white)),
         trailing: Text(
           '\$${product.price.toStringAsFixed(2)}',
-          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
     );
