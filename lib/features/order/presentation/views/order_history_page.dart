@@ -16,7 +16,6 @@ class OrderHistoryPage extends StatefulWidget {
 }
 
 class _OrderHistoryPageState extends State<OrderHistoryPage> {
-
   @override
   void initState() {
     super.initState();
@@ -25,17 +24,30 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
   void fetchOrder() async {
     String userid = await StorageUtils.getToken(key: "userid") ?? "0";
-    BlocProvider.of<OrderBloc>(context)
-        .add(LoadHistoryOrder(userid));
+    BlocProvider.of<OrderBloc>(context).add(LoadHistoryOrder(userid));
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Order History'),
+        title: const Text(
+          'Order History',
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Colors.teal,
+        leading: InkWell(
+          borderRadius: BorderRadius.circular(100),
+          onTap: () => Navigator.of(context).pop(),
+          child: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: BlocBuilder<OrderBloc, OrderState>(
         builder: (context, state) {
@@ -94,7 +106,10 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                     arguments: order);
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.grey),
-              child: const Text('View Details', style: TextStyle(color: Colors.white),),
+              child: const Text(
+                'View Details',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           ],
         ),

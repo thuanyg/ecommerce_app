@@ -1,5 +1,9 @@
+import 'package:ecommerce_app/features/user/data/models/user.dart';
+import 'package:ecommerce_app/features/user/presentation/blocs/signup/signup_bloc.dart';
+import 'package:ecommerce_app/features/user/presentation/blocs/signup/signup_event.dart';
 import 'package:ecommerce_app/features/user/presentation/views/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SignupPage extends StatefulWidget {
   static String routeName = "/SignUpPage";
@@ -63,28 +67,31 @@ class _SignUpPageState extends State<SignupPage> {
   }
 
   Widget _submitButton() {
-    return Container(
-      width: MediaQuery.of(context).size.width,
-      padding: EdgeInsets.symmetric(vertical: 15),
-      alignment: Alignment.center,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(5)),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-              color: Colors.grey.shade200,
-              offset: Offset(2, 4),
-              blurRadius: 5,
-              spreadRadius: 2)
-        ],
-        gradient: const LinearGradient(
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-          colors: [Color(0xfffbb448), Color(0xfff7892b)],
+    return InkWell(
+      onTap: signUpAction,
+      child: Container(
+        width: MediaQuery.of(context).size.width,
+        padding: EdgeInsets.symmetric(vertical: 15),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(5)),
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+                color: Colors.grey.shade200,
+                offset: Offset(2, 4),
+                blurRadius: 5,
+                spreadRadius: 2)
+          ],
+          gradient: const LinearGradient(
+            begin: Alignment.centerLeft,
+            end: Alignment.centerRight,
+            colors: [Color(0xfffbb448), Color(0xfff7892b)],
+          ),
         ),
-      ),
-      child: const Text(
-        'Register Now',
-        style: TextStyle(fontSize: 20, color: Colors.white),
+        child: const Text(
+          'Register Now',
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
       ),
     );
   }
@@ -199,5 +206,15 @@ class _SignUpPageState extends State<SignupPage> {
         ),
       ),
     );
+  }
+
+  void signUpAction() async {
+    User user = User(
+      username: usernameController.text.trim(),
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
+    print(user.email);
+    BlocProvider.of<SignupBloc>(context).add(PressSignUp(user));
   }
 }

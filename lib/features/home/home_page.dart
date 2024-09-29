@@ -8,7 +8,7 @@ import 'package:ecommerce_app/features/product/presentation/blocs/product_catego
 import 'package:ecommerce_app/features/product/presentation/blocs/product_category/product_category_event.dart';
 import 'package:ecommerce_app/features/product/presentation/views/home_page.dart';
 import 'package:ecommerce_app/features/user/presentation/views/profile_page.dart';
-import 'package:ecommerce_app/features/wishlist/wishlist_screen.dart';
+import 'package:ecommerce_app/features/favorite/presentation/views/wishlist_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,7 +17,6 @@ class HomePage extends StatelessWidget {
 
   static String routeName = "/HomePage";
   final pageController = PageController(initialPage: 0);
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -34,7 +33,7 @@ class HomePage extends StatelessWidget {
                 CategoryScreen(),
                 const CartScreen(),
                 const WishlistScreen(),
-                ProfilePage(),
+                const ProfilePage(),
               ],
               onPageChanged: (index) {
                 pageBloc.changePage(index);
@@ -46,10 +45,13 @@ class HomePage extends StatelessWidget {
           builder: (context, currentIndex) {
             final pageBloc = context.read<PageBloc>();
             return BottomNavigationBar(
-              iconSize: 26,
-              backgroundColor: Colors.white70,
+              iconSize: 24,
+              selectedLabelStyle: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 12,
+              ),
+              backgroundColor: Colors.white,
               type: BottomNavigationBarType.fixed,
-              elevation: 10,
               showUnselectedLabels: true,
               currentIndex: currentIndex,
               onTap: (index) {
@@ -77,12 +79,12 @@ class HomePage extends StatelessWidget {
                 (index) {
                   return BottomNavigationBarItem(
                     icon: Image.asset(navigationBarItems[index].image),
+                    tooltip: navigationBarItems[index].label,
+                    label: navigationBarItems[index].label,
                     activeIcon: Image.asset(
                       navigationBarItems[index].image,
                       color: AppColors.enableColor,
                     ),
-                    label: navigationBarItems[index].label,
-                    backgroundColor: Colors.white,
                   );
                 },
               ).toList(),

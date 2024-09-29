@@ -1,9 +1,12 @@
 import 'dart:math';
 
+import 'package:ecommerce_app/core/utils/storage.dart';
 import 'package:ecommerce_app/features/home/home_page.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/login/login_bloc.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/login/login_event.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/login/login_state.dart';
+import 'package:ecommerce_app/features/user/presentation/blocs/personal/personal_bloc.dart';
+import 'package:ecommerce_app/features/user/presentation/blocs/personal/personal_event.dart';
 import 'package:ecommerce_app/features/user/presentation/views/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,29 +23,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final usernameController = TextEditingController(text: "thuanht1@gmail.com");
   final passwordController = TextEditingController(text: "12345");
-
-  Widget _backButton() {
-    return InkWell(
-      onTap: () {
-        Navigator.pop(context);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        child: Row(
-          children: <Widget>[
-            Container(
-              padding: const EdgeInsets.only(left: 0, top: 10, bottom: 10),
-              child: const Icon(Icons.keyboard_arrow_left, color: Colors.black),
-            ),
-            const Text(
-              'Back',
-              style: TextStyle(fontSize: 12, fontWeight: FontWeight.w500),
-            )
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget _entryField(TextEditingController controller, String title,
       {bool isPassword = false}) {
@@ -288,6 +268,7 @@ class _LoginPageState extends State<LoginPage> {
                         return _submitButton();
                       }
                       if (state is LoginSuccess) {
+                        fetchUserData();
                         WidgetsBinding.instance.addPostFrameCallback((_) {
                           Navigator.of(context).pushNamed(HomePage.routeName);
                         });
@@ -312,7 +293,6 @@ class _LoginPageState extends State<LoginPage> {
               ),
             ),
           ),
-          Positioned(top: 40, left: 0, child: _backButton()),
         ],
       ),
     ));
@@ -322,6 +302,12 @@ class _LoginPageState extends State<LoginPage> {
     String username = usernameController.text.trim();
     String password = passwordController.text.trim();
     BlocProvider.of<LoginBloc>(context).add(PressLogin(username, password));
+
+  }
+
+  Future<void> fetchUserData() async {
+    String id = await StorageUtils.getToken(key: "userid") ?? "0";
+    context.read<PersonalBloc>().add(PersonalLoadInformation(id));
   }
 }
 

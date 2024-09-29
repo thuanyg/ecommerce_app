@@ -21,6 +21,7 @@ import 'package:ecommerce_app/features/product/presentation/blocs/product_catego
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyHomeScreen extends StatefulWidget {
   const MyHomeScreen({super.key});
@@ -33,7 +34,6 @@ class MyHomeScreen extends StatefulWidget {
 
 class _MyHomeScreenState extends State<MyHomeScreen>
     with AutomaticKeepAliveClientMixin {
-  int selectedQuantity = 1; // Default quantity
 
   @override
   void initState() {
@@ -176,7 +176,15 @@ class _MyHomeScreenState extends State<MyHomeScreen>
       child: CarouselSlider.builder(
         itemCount: 15,
         itemBuilder: (BuildContext context, int itemIndex, int pageViewIndex) {
-          return const SlideItem();
+          return SlideItem(
+            onTap: () async {
+              final Uri url = Uri.parse(
+                  'https://cellphones.com.vn/thiet-bi-am-thanh/tai-nghe/headphones.html');
+              if (!await launchUrl(url)) {
+                throw Exception('Could not launch $url');
+              }
+            },
+          );
         },
         options: CarouselOptions(
           height: 148,
@@ -197,7 +205,7 @@ class _MyHomeScreenState extends State<MyHomeScreen>
       automaticallyImplyLeading: false,
       flexibleSpace: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16),
-        margin: const EdgeInsets.only(top: 24),
+        margin: const EdgeInsets.only(top: 36),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -275,8 +283,8 @@ class ProductGrid extends StatelessWidget {
       itemCount: products.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2, // Two items per row
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
+        crossAxisSpacing: 3,
+        mainAxisSpacing: 3,
         childAspectRatio: 0.75,
       ),
       itemBuilder: (context, index) {

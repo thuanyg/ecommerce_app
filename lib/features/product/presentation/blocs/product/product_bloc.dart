@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:ecommerce_app/features/product/domain/entities/product.dart';
 import 'package:ecommerce_app/features/product/domain/usecases/fetch_product_by_category_usecase.dart';
 import 'package:ecommerce_app/features/product/domain/usecases/fetch_product_usecase.dart';
 import 'package:ecommerce_app/features/product/domain/usecases/fetch_products_usecase.dart';
@@ -11,9 +12,9 @@ import 'package:ecommerce_app/features/product/presentation/blocs/product/produc
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final FetchProducts? fetchProducts;
   final FetchProductByID? fetchProductByID;
+  List<ProductEntity> productsFavorite = [];
 
-  ProductBloc(
-      {this.fetchProducts, this.fetchProductByID})
+  ProductBloc({this.fetchProducts, this.fetchProductByID})
       : super(ProductInitial()) {
     on<LoadProducts>(_onLoadProducts);
   }
@@ -28,6 +29,21 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       } catch (e) {
         emit(ProductError(e.toString()));
       }
+    }
+  }
+
+  Future<void> onLoadProductsFavorite(List<String> productIDs) async {
+    productsFavorite.clear();
+    try {
+      // Duyệt qua danh sách productIDs và fetch từng sản phẩm
+      for (String productID in productIDs) {
+        final product = await fetchProductByID!(productID);
+        if (product.id != null) {
+          productsFavorite.add(product);
+        }
+      }
+    } on Exception catch (e) {
+      throw Exception("An error occurred while loading favorite products: $e");
     }
   }
 }

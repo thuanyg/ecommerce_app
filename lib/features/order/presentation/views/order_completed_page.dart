@@ -123,7 +123,7 @@ class OrderCompletePage extends StatelessWidget {
                       // Continue Shopping Button
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.popUntil(context, (route) => route.isFirst);
+                          Navigator.of(context).pop();
                         },
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.symmetric(horizontal: 60, vertical: 15),

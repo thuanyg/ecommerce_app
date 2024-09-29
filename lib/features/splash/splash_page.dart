@@ -1,4 +1,5 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:ecommerce_app/core/config/colors.dart';
 import 'package:ecommerce_app/core/utils/storage.dart';
 import 'package:ecommerce_app/features/home/home_page.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/personal/personal_bloc.dart';
@@ -28,7 +29,7 @@ class SplashPageState extends State<SplashPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.teal,
       body: BlocListener<PersonalBloc, PersonalState>(
         listener: (context, state) {
           if (state is PersonalLoaded) {

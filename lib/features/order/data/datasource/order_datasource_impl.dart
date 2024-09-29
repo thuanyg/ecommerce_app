@@ -20,7 +20,7 @@ class OrderDatasourceImpl extends OrderDatasource {
   Future<List<Order>> fetchOrders(String userid) async {
     try {
       Response response = await dio.get(
-        "$baseUrl/orders?userID=$userid",
+        "$baseUrl/orders?userID=$userid&_sort=date&_order=desc",
       );
 
       if (response.statusCode == 200) {

@@ -1,5 +1,8 @@
+import 'package:ecommerce_app/core/components/order_price_info.dart';
+import 'package:ecommerce_app/core/config/colors.dart';
 import 'package:ecommerce_app/core/utils/image_helper.dart';
 import 'package:ecommerce_app/features/cart/domain/entities/product.dart';
+import 'package:ecommerce_app/features/cart/presentation/blocs/cart_bloc.dart';
 import 'package:ecommerce_app/features/order/data/model/order.dart';
 import 'package:ecommerce_app/features/order/presentation/bloc/order_bloc.dart';
 import 'package:ecommerce_app/features/order/presentation/bloc/order_state.dart';
@@ -22,9 +25,25 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   @override
   Widget build(BuildContext context) {
     order = ModalRoute.of(context)?.settings.arguments as Order;
+    final priceCalculator =
+        BlocProvider.of<CartBloc>(context).getCartPriceState(order.carts!);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Order Details'),
+        title: const Text(
+          'Order Details',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        leading: InkWell(
+          borderRadius: BorderRadius.circular(100),
+          onTap: () => Navigator.of(context).pop(),
+          child: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         centerTitle: true,
         backgroundColor: Colors.teal,
       ),
@@ -38,13 +57,18 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     _buildOrderInfoSection(),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     _buildAddressSection(),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     _buildCartProductsSection(),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
+                    OrderPriceInfo(
+                      size: MediaQuery.of(context).size,
+                      priceCalculate: priceCalculator,
+                    ),
+                    const SizedBox(height: 20),
                     _buildPaymentSection(),
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     _buildOrderStatusSection(),
                   ],
                 ),
@@ -148,6 +172,23 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
     );
   }
 
+  Widget _buildOrderPriceSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Order Prices',
+          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        _buildInfoRow(
+          'Status',
+          order.status == true ? 'Completed' : 'Pending',
+        ),
+      ],
+    );
+  }
+
   // Hiển thị từng thông tin theo hàng
   Widget _buildInfoRow(String label, String value) {
     return Padding(
@@ -165,7 +206,7 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
   // Hiển thị sản phẩm trong giỏ hàng
   Widget _buildCartProductItem(CartProductEntity product) {
     return Card(
-      color: Colors.grey.shade500,
+      color: AppColors.disableColor,
       margin: const EdgeInsets.symmetric(vertical: 8.0),
       child: ListTile(
         leading: ImageHelper.loadNetworkImage(
@@ -178,12 +219,17 @@ class _OrderDetailPageState extends State<OrderDetailPage> {
           style:
               const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
-        subtitle: Text('SL: ${product.quantity}',
-            style: const TextStyle(color: Colors.white)),
+        subtitle: Text(
+          'SL: ${product.quantity}',
+          style: const TextStyle(color: Colors.white),
+        ),
         trailing: Text(
           '\$${product.price.toStringAsFixed(2)}',
           style: const TextStyle(
-              color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

@@ -9,6 +9,7 @@ import 'package:ecommerce_app/features/product/presentation/blocs/product_catego
 import 'package:ecommerce_app/features/product/presentation/components/product_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 
 class CategoryScreen extends StatefulWidget {
@@ -47,7 +48,7 @@ class _CategoryScreenState extends State<CategoryScreen>
             crossAxisCount: 2,
             mainAxisSpacing: 16, // Adjusted for better spacing
             crossAxisSpacing: 16, // Added cross axis spacing
-            childAspectRatio: 2.3, // Adjusted for square items
+            childAspectRatio: 2.0, // Adjusted for square items
           ),
           itemBuilder: (context, index) {
             return buildCategoryItem(
@@ -139,8 +140,28 @@ Widget buildProductByCategoryScreen({
         }
 
         if (state is ProductCategoryError) {
+          final size = MediaQuery.of(context).size;
           return Center(
-            child: Text(state.message),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.category_outlined,
+                  size: size.width * 0.20,
+                  color: Colors.grey,
+                ),
+                SizedBox(
+                  height: size.height * 0.020,
+                ),
+                Text(
+                  "The products of $category is empty!",
+                  style: GoogleFonts.poppins(
+                    color: Colors.grey,
+                    fontSize: 16
+                  ),
+                )
+              ],
+            ),
           );
         }
 

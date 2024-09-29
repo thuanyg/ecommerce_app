@@ -24,7 +24,7 @@ InkWell buildCategoryItem(
         children: [
           Image.asset(
             categories[index].image,
-            height: 40,
+            height: 36,
             fit: BoxFit.fill,
           ),
           const SizedBox(height: 3),
