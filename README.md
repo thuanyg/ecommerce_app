@@ -20,8 +20,6 @@
   <img alt="License" src="https://img.shields.io/github/license/thuanyg/ecommerce_app?color=56BEB8">
 </p>
 
-
-
 ## Status
 
 <h4 align="center">
@@ -83,11 +81,7 @@ Here are some Illustration of App Screens
 
 ## :rocket: Video Demo
 
-<p align="center">
-  <a href="https://youtube.com/demo_video_link">
-    <img src="https://www.youtube.com/watch?v=2SHIGD9bs58" alt="Watch the video" width="400">
-  </a>
-</p>
+[![Watch the demo](https://img.youtube.com/vi/your_video_id/maxresdefault.jpg)](https://www.youtube.com/watch?v=2SHIGD9bs58)
 
 
 ## :rocket: Resources
