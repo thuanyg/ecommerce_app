@@ -81,7 +81,11 @@ Here are some Illustration of App Screens
 
 ## :rocket: Video Demo
 
-[![Watch the demo](https://e7.pngegg.com/pngimages/503/589/png-clipart-youtube-icon-youtube-live-computer-icons-music-youtube-logo-angle-rectangle.png)](https://www.youtube.com/watch?v=2SHIGD9bs58)
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=2SHIGD9bs58">
+    <img src="https://e7.pngegg.com/pngimages/503/589/png-clipart-youtube-icon-youtube-live-computer-icons-music-youtube-logo-angle-rectangle.png" alt="Watch the demo" width="24" />
+  </a>
+</p>
 
 
 ## :rocket: Resources
