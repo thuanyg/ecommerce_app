@@ -81,7 +81,7 @@ Here are some Illustration of App Screens
 
 ## :rocket: Video Demo
 
-[![Watch the demo](https://img.youtube.com/vi/your_video_id/maxresdefault.jpg)](https://www.youtube.com/watch?v=2SHIGD9bs58)
+[![Watch the demo](https://e7.pngegg.com/pngimages/503/589/png-clipart-youtube-icon-youtube-live-computer-icons-music-youtube-logo-angle-rectangle.png)](https://www.youtube.com/watch?v=2SHIGD9bs58)
 
 
 ## :rocket: Resources
