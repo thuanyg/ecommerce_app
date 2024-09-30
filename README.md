@@ -11,27 +11,19 @@
 <h1 align="center">Flutter eCommerce App</h1>
 
 <p align="center">
-  <img alt="Github top language" src="https://img.shields.io/github/languages/top/rahul-badgujar/e_commerce_app_flutter?color=56BEB8">
+  <img alt="Github top language" src="https://img.shields.io/github/languages/top/thuanyg/ecommerce_app?color=56BEB8">
 
-  <img alt="Github language count" src="https://img.shields.io/github/languages/count/rahul-badgujar/e_commerce_app_flutter?color=56BEB8">
+  <img alt="Github language count" src="https://img.shields.io/github/languages/count/thuanyg/ecommerce_app?color=56BEB8">
 
   <img alt="Repository size" src="https://img.shields.io/github/repo-size/thuanyg/ecommerce_app?color=56BEB8">
 
   <img alt="License" src="https://img.shields.io/github/license/thuanyg/ecommerce_app?color=56BEB8">
-
-  <!-- <img alt="Github issues" src="https://img.shields.io/github/issues/{{YOUR_GITHUB_USERNAME}}/e_commerce_app_flutter?color=56BEB8" />
-
-  <img alt="Github forks" src="https://img.shields.io/github/forks/{{YOUR_GITHUB_USERNAME}}/e_commerce_app_flutter?color=56BEB8" />
-
-  <img alt="Github stars" src="https://img.shields.io/github/stars/{{YOUR_GITHUB_USERNAME}}/e_commerce_app_flutter?color=56BEB8" /> -->
 </p>
-
-
 
 ## Status
 
 <h4 align="center">
-	🚧  Shopee App  🚧
+	🚧  eCommerce App  🚧
 </h4>
 
 <hr>
@@ -59,6 +51,7 @@ NOTE: This application simulates a mock buy-sell cycle, as no payment gateway ha
 :heavy_check_mark: Show Categories\
 :heavy_check_mark: View product\
 :heavy_check_mark: View products of Different Cateogories\
+:heavy_check_mark: Wishlist/Favorite list\
 :heavy_check_mark: Cart features\
 :heavy_check_mark: Mark products as your favourites\
 :heavy_check_mark: Manage your Account\
@@ -69,28 +62,30 @@ NOTE: This application simulates a mock buy-sell cycle, as no payment gateway ha
 
 Here are some Illustration of App Screens
 
-| ![](illustrations/home_screen.png) | ![](illustrations/home_screen_drawer.png) | ![](illustrations/search_result.png) |
-| :--------------------------------: | :---------------------------------------: | :----------------------------------: |
-|            Home Screen             |            Home Screen Drawer             |            Search Result             |
+<p>
+ 	 <img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_login.jpg" width="250" />
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_signup.jpg" width="250" />
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_home.jpg" width="250" />
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_categories.jpg" width="250" />
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_product_category.jpg" width="250" />
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_wishlist.jpg" width="250" />	
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_product_detail.jpg" width="250" />
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_addtocart.jpg" width="250" />
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_cart.jpg" width="250" />
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_product_category.jpg" width="250" />
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_checkout.jpg" width="250" />
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_ordercompleted.jpg" width="250" />
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_orderhistory.jpg" width="250" />
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_profile.jpg" width="250" />	
+</p>
 
-| ![](illustrations/product_details_1.png) | ![](illustrations/product_details_2.png) | ![](illustrations/category_product.png) |
-| :--------------------------------------: | :--------------------------------------: | :-------------------------------------: |
-|        Product Details Screen - 1        |        Product Details Screen - 2        |        Category Products Screen         |
+## :rocket: Video Demo
 
-| ![](illustrations/manage_addresses.png) | ![](illustrations/address_dialog.png) | ![](illustrations/cart.png) |
-| :-------------------------------------: | :-----------------------------------: | :-------------------------: |
-|         Manage Addresses Screen         |            Address Dialog             |         Cart Screen         |
-
-| ![](illustrations/my_orders.png) | ![](illustrations/my_products.png) | ![](illustrations/edit_product.png) |
-| :------------------------------: | :--------------------------------: | :---------------------------------: |
-|         My Orders Screen         |         My Products Screen         |     Add or Edit Product Screen      |
-
-| ![](illustrations/review_dialog.png) | ![](illustrations/sign_in.png) | ![](illustrations/sign_up.png) |
-| :----------------------------------: | :----------------------------: | :----------------------------: |
-|        Product Review Dialog         |         Sign In Screen         |         Sign Up Screen         |
-
-
-And all rest at [more screens](illustrations/)
+<p align="center">
+  <a href="https://www.youtube.com/watch?v=2SHIGD9bs58">
+    <img src="https://e7.pngegg.com/pngimages/503/589/png-clipart-youtube-icon-youtube-live-computer-icons-music-youtube-logo-angle-rectangle.png" alt="Watch the demo" width="24" />
+  </a>
+</p>
 
 
 ## :rocket: Resources
