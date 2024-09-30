@@ -39,7 +39,6 @@ class _MyHomeScreenState extends State<MyHomeScreen>
   void initState() {
     super.initState();
     BlocProvider.of<ProductBloc>(context).add(LoadProducts(30));
-    BlocProvider.of<CartBloc>(context).add(LoadMyCart());
   }
 
   @override
@@ -50,7 +49,6 @@ class _MyHomeScreenState extends State<MyHomeScreen>
       appBar: buildAppBar(),
       body: RefreshIndicator(
         color: AppColors.enableColor,
-        elevation: 3,
         onRefresh: () async {
           BlocProvider.of<ProductBloc>(context).add(LoadProducts(30));
         },

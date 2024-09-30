@@ -44,10 +44,9 @@ class UserDatasourceImpl extends UserDatasource {
         return User.fromJson(data);
       } else {
         throw Exception(
-            "Failed to sign up. Status code: ${response.statusCode}");
+            response.data.toString());
       }
     } on DioError catch (dioError) {
-      // Handle Dio-specific errors here
       throw Exception("Dio error: ${dioError.message}");
     } catch (e) {
       // General exception handling

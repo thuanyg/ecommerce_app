@@ -10,6 +10,7 @@ import 'package:ecommerce_app/features/user/presentation/blocs/personal/personal
 import 'package:ecommerce_app/features/user/presentation/views/signup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 
 class LoginPage extends StatefulWidget {
   static String routeName = "/LoginPage";
@@ -165,33 +166,31 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Widget _createAccountLabel() {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, SignupPage.routeName);
-      },
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 20),
-        padding: const EdgeInsets.all(15),
-        alignment: Alignment.bottomCenter,
-        child: const Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'Don\'t have an account ?',
-              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            Text(
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 20),
+      padding: const EdgeInsets.all(15),
+      alignment: Alignment.bottomCenter,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          const Text(
+            'Don\'t have an account ?',
+            style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          InkWell(
+            onTap: () => Navigator.pushNamed(context, SignupPage.routeName),
+            child: const Text(
               'Register',
               style: TextStyle(
                   color: Color(0xfff79c4f),
                   fontSize: 13,
-                  fontWeight: FontWeight.w600),
+                  fontWeight: FontWeight.w600,),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -255,8 +254,11 @@ class _LoginPageState extends State<LoginPage> {
                   BlocBuilder<LoginBloc, LoginState>(
                     builder: (context, state) {
                       if (state is LoginLoading) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
+                        return Center(
+                          child: Lottie.asset(
+                            "assets/animations/loading.json",
+                            width: 90,
+                          ),
                         );
                       }
                       if (state is LoginError) {
@@ -269,9 +271,6 @@ class _LoginPageState extends State<LoginPage> {
                       }
                       if (state is LoginSuccess) {
                         fetchUserData();
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          Navigator.of(context).pushNamed(HomePage.routeName);
-                        });
                       }
                       return _submitButton();
                     },
@@ -308,6 +307,9 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> fetchUserData() async {
     String id = await StorageUtils.getToken(key: "userid") ?? "0";
     context.read<PersonalBloc>().add(PersonalLoadInformation(id));
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Navigator.of(context).pushNamed(HomePage.routeName);
+    });
   }
 }
 

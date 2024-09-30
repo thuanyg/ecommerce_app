@@ -1,5 +1,3 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:ecommerce_app/core/config/colors.dart';
 import 'package:ecommerce_app/core/utils/storage.dart';
 import 'package:ecommerce_app/features/home/home_page.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/personal/personal_bloc.dart';
@@ -7,6 +5,7 @@ import 'package:ecommerce_app/features/user/presentation/blocs/personal/personal
 import 'package:ecommerce_app/features/user/presentation/blocs/personal/personal_state.dart';
 import 'package:ecommerce_app/features/user/presentation/views/login_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
@@ -28,6 +27,9 @@ class SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
     return Scaffold(
       backgroundColor: Colors.teal,
       body: BlocListener<PersonalBloc, PersonalState>(

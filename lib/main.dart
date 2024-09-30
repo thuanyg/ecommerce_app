@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:dio/dio.dart';
@@ -20,7 +21,6 @@ import 'package:ecommerce_app/features/favorite/presentation/blocs/favorite_bloc
 import 'package:ecommerce_app/features/home/page_bloc.dart';
 import 'package:ecommerce_app/features/order/data/datasource/order_datasource_impl.dart';
 import 'package:ecommerce_app/features/order/data/repository/order_repository_impl.dart';
-import 'package:ecommerce_app/features/order/domain/repository/order_repository.dart';
 import 'package:ecommerce_app/features/order/domain/usecase/create_order.dart';
 import 'package:ecommerce_app/features/order/domain/usecase/history_order.dart';
 import 'package:ecommerce_app/features/order/presentation/bloc/order_bloc.dart';
@@ -43,7 +43,6 @@ import 'package:ecommerce_app/features/user/presentation/blocs/login/login_bloc.
 import 'package:ecommerce_app/features/user/presentation/blocs/logout/logout_bloc.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/personal/personal_bloc.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/signup/signup_bloc.dart';
-import 'package:ecommerce_app/features/user/presentation/views/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -167,7 +166,7 @@ class MyApp extends StatelessWidget {
       ),
     );
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Ecommerce Application',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,

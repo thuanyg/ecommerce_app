@@ -1,7 +1,3 @@
-import 'dart:ffi';
-
-import 'package:ecommerce_app/features/product/data/models/product.dart';
-
 class ProductEntity {
   String? id;
   String? title;

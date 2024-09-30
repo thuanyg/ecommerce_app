@@ -1,9 +1,13 @@
+import 'package:ecommerce_app/core/utils/dialog.dart';
+import 'package:ecommerce_app/features/home/home_page.dart';
 import 'package:ecommerce_app/features/user/data/models/user.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/signup/signup_bloc.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/signup/signup_event.dart';
+import 'package:ecommerce_app/features/user/presentation/blocs/signup/signup_state.dart';
 import 'package:ecommerce_app/features/user/presentation/views/login_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lottie/lottie.dart';
 
 class SignupPage extends StatefulWidget {
   static String routeName = "/SignUpPage";
@@ -11,10 +15,10 @@ class SignupPage extends StatefulWidget {
   const SignupPage({super.key});
 
   @override
-  _SignUpPageState createState() => _SignUpPageState();
+  SignUpPageState createState() => SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignupPage> {
+class SignUpPageState extends State<SignupPage> {
   final emailController = TextEditingController();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
@@ -42,7 +46,8 @@ class _SignUpPageState extends State<SignupPage> {
     );
   }
 
-  Widget _entryField(TextEditingController controller, String title, {bool isPassword = false}) {
+  Widget _entryField(TextEditingController controller, String title,
+      {bool isPassword = false}) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
       child: Column(
@@ -56,11 +61,13 @@ class _SignUpPageState extends State<SignupPage> {
             height: 10,
           ),
           TextField(
-              obscureText: isPassword,
-              decoration: const InputDecoration(
-                  border: InputBorder.none,
-                  fillColor: Color(0xfff3f3f4),
-                  filled: true))
+            controller: controller,
+            obscureText: isPassword,
+            decoration: const InputDecoration(
+                border: InputBorder.none,
+                fillColor: Color(0xfff3f3f4),
+                filled: true),
+          )
         ],
       ),
     );
@@ -71,14 +78,14 @@ class _SignUpPageState extends State<SignupPage> {
       onTap: signUpAction,
       child: Container(
         width: MediaQuery.of(context).size.width,
-        padding: EdgeInsets.symmetric(vertical: 15),
+        padding: const EdgeInsets.symmetric(vertical: 15),
         alignment: Alignment.center,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
+          borderRadius: const BorderRadius.all(Radius.circular(5)),
           boxShadow: <BoxShadow>[
             BoxShadow(
                 color: Colors.grey.shade200,
-                offset: Offset(2, 4),
+                offset: const Offset(2, 4),
                 blurRadius: 5,
                 spreadRadius: 2)
           ],
@@ -169,17 +176,17 @@ class _SignUpPageState extends State<SignupPage> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     return Scaffold(
-      body: Container(
+      body: SizedBox(
         height: height,
         child: Stack(
           children: <Widget>[
             Positioned(
               top: -MediaQuery.of(context).size.height * .15,
               right: -MediaQuery.of(context).size.width * .4,
-              child: BezierContainer(),
+              child: const BezierContainer(),
             ),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -193,6 +200,35 @@ class _SignUpPageState extends State<SignupPage> {
                     _emailPasswordWidget(),
                     const SizedBox(
                       height: 20,
+                    ),
+                    BlocBuilder<SignupBloc, SignupState>(
+                      builder: (context, state) {
+                        if (state is SignUpLoading) {
+                          return Center(
+                            child: Lottie.asset(
+                              "assets/animations/loading.json",
+                              width: 90,
+                            ),
+                          );
+                        }
+
+                        if (state is SignUpSuccess) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.of(context).pushNamed(LoginPage.routeName);
+                          });
+                        }
+
+                        if (state is SignUpError) {
+                          return const Padding(
+                            padding: EdgeInsets.only(bottom: 16),
+                            child: Text(
+                              "Email or username already exists!",
+                              style: TextStyle(color: Colors.red),
+                            ),
+                          );
+                        }
+                        return const SizedBox.shrink();
+                      },
                     ),
                     _submitButton(),
                     SizedBox(height: height * .14),
@@ -213,8 +249,24 @@ class _SignUpPageState extends State<SignupPage> {
       username: usernameController.text.trim(),
       email: emailController.text.trim(),
       password: passwordController.text.trim(),
+      name: Name(firstname: "", lastname: ""),
+      address: Address(
+        city: "",
+        geolocation: Geolocation(lat: "", long: ""),
+        number: 0,
+        street: "",
+        zipcode: "",
+      ),
+      phone: "",
     );
-    print(user.email);
-    BlocProvider.of<SignupBloc>(context).add(PressSignUp(user));
+    if (user.username != "" && user.email != "" && user.password != "") {
+      BlocProvider.of<SignupBloc>(context).add(PressSignUp(user));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Please enter all fields!"),
+        ),
+      );
+    }
   }
 }

@@ -363,7 +363,7 @@ class _ProductDetailState extends State<ProductDetail> {
 
             return Center(
               child: Lottie.asset(
-                "assets/animations/loading.png",
+                "assets/animations/loading.json",
                 width: 90,
               ),
             );
