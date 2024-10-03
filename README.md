@@ -51,12 +51,13 @@ NOTE: This application simulates a mock buy-sell cycle, as no payment gateway ha
 :heavy_check_mark: Show Categories\
 :heavy_check_mark: View product\
 :heavy_check_mark: View products of Different Cateogories\
+:heavy_check_mark: Search products\
 :heavy_check_mark: Wishlist/Favorite list\
 :heavy_check_mark: Cart features\
 :heavy_check_mark: Mark products as your favourites\
 :heavy_check_mark: Manage your Account\
-:heavy_check_mark: Order, Order details & History
-:heavy_check_mark: Review the products you buy
+:heavy_check_mark: Order, Order details & History\
+:heavy_check_mark: Review the products you buy\
 
 ## :checkered_flag: Illustrations
 
@@ -66,6 +67,8 @@ Here are some Illustration of App Screens
  	 <img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_login.jpg" width="250" />
 	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_signup.jpg" width="250" />
 	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_home.jpg" width="250" />
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_search.jpg" width="250" />
+	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_search_result.jpg" width="250" />
 	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_categories.jpg" width="250" />
 	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_product_category.jpg" width="250" />
 	<img src="https://raw.githubusercontent.com/thuanyg/ecommerce_app/refs/heads/master/screenshots/screenshot_wishlist.jpg" width="250" />	
