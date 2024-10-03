@@ -1,0 +1,3 @@
+void initHive() async {
+
+}

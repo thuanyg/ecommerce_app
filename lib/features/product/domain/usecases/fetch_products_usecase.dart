@@ -6,7 +6,7 @@ class FetchProducts {
 
   FetchProducts(this.repository);
 
-  Future<List<ProductEntity>> call(int limit) async {
-    return await repository.fetchProducts(limit);
+  Future<List<ProductEntity>> call(int page, int limit) async {
+    return await repository.fetchProducts(page, limit);
   }
 }

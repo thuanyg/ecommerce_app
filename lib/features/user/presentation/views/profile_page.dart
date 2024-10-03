@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:ecommerce_app/core/config/colors.dart';
+import 'package:ecommerce_app/core/theme/theme_bloc.dart';
+import 'package:ecommerce_app/core/theme/theme_event.dart';
 import 'package:ecommerce_app/core/utils/dialog.dart';
 import 'package:ecommerce_app/core/utils/image_helper.dart';
 import 'package:ecommerce_app/core/utils/storage.dart';
@@ -221,6 +223,7 @@ class ProfilePageState extends State<ProfilePage> with AutomaticKeepAliveClientM
                     setState(() {
                       isDarkTheme = value;
                     });
+                    BlocProvider.of<ThemeBloc>(context).add(ToggleTheme());
                   },
                 ),
               ),

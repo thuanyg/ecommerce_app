@@ -15,6 +15,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
+  final GlobalKey<MyHomeScreenState> homeScreenKey = GlobalKey<MyHomeScreenState>();
+
   static String routeName = "/HomePage";
   final pageController = PageController(initialPage: 0);
   @override
@@ -29,7 +31,7 @@ class HomePage extends StatelessWidget {
               controller: pageBloc.pageController,
               physics: const NeverScrollableScrollPhysics(),
               children: [
-                const MyHomeScreen(),
+                MyHomeScreen(key: homeScreenKey),
                 CategoryScreen(),
                 const CartScreen(),
                 const WishlistScreen(),
@@ -58,7 +60,8 @@ class HomePage extends StatelessWidget {
                 if (currentIndex == index) {
                   switch (index) {
                     case 0:
-                      print("Refresh Home");
+                      homeScreenKey.currentState?.scrollToTop();
+                      print(homeScreenKey.currentState);
                     case 1:
                       BlocProvider.of<ProductCategoryBloc>(context).add(
                         ResetProductCategory(),

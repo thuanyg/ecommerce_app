@@ -9,9 +9,9 @@ class ProductDatasourceImpl extends ProductDataSource {
   ProductDatasourceImpl({required this.dio});
 
   @override
-  Future<List<ProductModel>> fetchProducts(int limit) async {
+  Future<List<ProductModel>> fetchProducts(int page, int limit) async {
     Response response =
-        await dio.get("$baseUrl/products?_limit=$limit");
+        await dio.get("$baseUrl/products?_page=$page&_limit=$limit");
 
     if (response.statusCode == 200) {
       final List<dynamic> jsonData = response.data;
@@ -25,10 +25,10 @@ class ProductDatasourceImpl extends ProductDataSource {
 
   @override
   Future<List<ProductModel>> fetchProductsByCategory(
-      String category, int limit) async {
+      String category, int page, int limit) async {
     try {
       Response response = await dio.get(
-          "$baseUrl/products?category=$category&_limit=$limit");
+          "$baseUrl/products?category=$category&_page=$page&_limit=$limit");
 
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;

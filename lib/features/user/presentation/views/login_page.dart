@@ -185,9 +185,10 @@ class _LoginPageState extends State<LoginPage> {
             child: const Text(
               'Register',
               style: TextStyle(
-                  color: Color(0xfff79c4f),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,),
+                color: Color(0xfff79c4f),
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
@@ -262,16 +263,19 @@ class _LoginPageState extends State<LoginPage> {
                         );
                       }
                       if (state is LoginError) {
-                        ScaffoldMessenger.of(context)
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          ScaffoldMessenger.of(context)
                             .showSnackBar(const SnackBar(
                           content: Text(
                               "Login failed. Username or password is not correct!"),
                         ));
+                        });
+                      
                         return _submitButton();
                       }
                       if (state is LoginSuccess) {
                         fetchUserData();
-                      }
+                        return SizedBox.shrink();                     }
                       return _submitButton();
                     },
                   ),
@@ -301,11 +305,10 @@ class _LoginPageState extends State<LoginPage> {
     String username = usernameController.text.trim();
     String password = passwordController.text.trim();
     BlocProvider.of<LoginBloc>(context).add(PressLogin(username, password));
-
   }
 
   Future<void> fetchUserData() async {
-    String id = await StorageUtils.getToken(key: "userid") ?? "0";
+    String id = await StorageUtils.getValue(key: "userid") ?? "0";
     context.read<PersonalBloc>().add(PersonalLoadInformation(id));
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Navigator.of(context).pushNamed(HomePage.routeName);

@@ -40,7 +40,7 @@ class CheckoutDialogState extends State<CheckoutDialog> {
               if (state is PersonalInitial) {
                 Future.microtask(() async {
                   String userid =
-                      await StorageUtils.getToken(key: "userid") ?? "";
+                      await StorageUtils.getValue(key: "userid") ?? "";
                   BlocProvider.of<PersonalBloc>(context)
                       .add(PersonalLoadInformation(userid));
                 });

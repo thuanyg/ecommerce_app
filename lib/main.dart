@@ -1,8 +1,9 @@
-
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/config/routes.dart';
+import 'package:ecommerce_app/core/theme/theme_bloc.dart';
+import 'package:ecommerce_app/core/theme/theme_state.dart';
 import 'package:ecommerce_app/features/cart/data/datasource/cart_local_datasource.dart';
 import 'package:ecommerce_app/features/cart/data/models/product.dart';
 import 'package:ecommerce_app/features/cart/data/repository/cart_repository_impl.dart';
@@ -32,6 +33,13 @@ import 'package:ecommerce_app/features/product/domain/usecases/fetch_products_us
 import 'package:ecommerce_app/features/product/presentation/blocs/detail/detail_bloc.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product/product_bloc.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product_category/product_category_bloc.dart';
+import 'package:ecommerce_app/features/search/data/datasource/search_datasource_impl.dart';
+import 'package:ecommerce_app/features/search/data/model/search_history.dart';
+import 'package:ecommerce_app/features/search/data/repository/search_repository_impl.dart';
+import 'package:ecommerce_app/features/search/domain/usecase/history_search.dart';
+import 'package:ecommerce_app/features/search/domain/usecase/search_product.dart';
+import 'package:ecommerce_app/features/search/presentation/bloc/history/history_bloc.dart';
+import 'package:ecommerce_app/features/search/presentation/bloc/search_bloc.dart';
 import 'package:ecommerce_app/features/splash/splash_page.dart';
 import 'package:ecommerce_app/features/user/data/datasource/user_datasource_impl.dart';
 import 'package:ecommerce_app/features/user/data/repository/user_repository_impl.dart';
@@ -47,15 +55,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Directory appDocDir = await getApplicationDocumentsDirectory();
-  Hive.init(appDocDir.path); // Use init() if not in Flutter context
+  ;
+  await Hive.initFlutter();
   Hive.registerAdapter(
       CartProductModelAdapter()); // Ensure your model is registered
+  Hive.registerAdapter(SearchHistoryAdapter());
   final cartBox = await Hive.openBox<CartProductModel>('cartBox');
+  final searchBox = await Hive.openBox<SearchHistory>('searchBox');
   final dio = Dio();
   // Product
   final productDatasource = ProductDatasourceImpl(dio: dio);
@@ -94,6 +104,12 @@ void main() async {
   final removeFavorite = RemoveFavoriteUseCase(favoriteRepository);
   final checkFavorite = CheckFavoriteUseCase(favoriteRepository);
   final getFavorites = GetFavoritesUseCase(favoriteRepository);
+
+  // Search
+  final searchDatasourceImpl = SearchDatasourceImpl(dio, searchBox);
+  final searchRepository = SearchRepositoryImpl(searchDatasourceImpl);
+  final searchProduct = SearchProductUseCase(searchRepository);
+  final historySearch = HistorySearchUseCase(searchRepository);
 
   runApp(MultiBlocProvider(
     providers: [
@@ -145,6 +161,15 @@ void main() async {
           getFavorites,
         ),
       ),
+      BlocProvider(
+        create: (context) => SearchBloc(searchProduct),
+      ),
+      BlocProvider(
+        create: (context) => HistoryBloc(historySearch),
+      ),
+      BlocProvider(
+        create: (context) => ThemeBloc(),
+      ),
     ],
     child: const MyApp(),
   ));
@@ -165,17 +190,18 @@ class MyApp extends StatelessWidget {
         statusBarIconBrightness: Brightness.dark,
       ),
     );
-    return MaterialApp(
-      title: 'Ecommerce Application',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-        scaffoldBackgroundColor: Colors.white,
-      ),
-      darkTheme: ThemeData.dark(),
-      debugShowCheckedModeBanner: false,
-      home: const SplashPage(),
-      routes: Routes.routes,
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, state) {
+        print(state.themeData);
+        return MaterialApp(
+          title: 'Ecommerce Application',
+          theme: state.themeData,
+          darkTheme: ThemeData.dark(),
+          debugShowCheckedModeBanner: false,
+          home: const SplashPage(),
+          routes: Routes.routes,
+        );
+      },
     );
   }
 }

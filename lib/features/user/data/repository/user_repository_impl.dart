@@ -14,9 +14,9 @@ class UserRepositoryImpl extends UserRepository {
     final token = await userDatasourceImpl.login(username, password);
     final payload = JwtUtils.getPayload(token);
     if (token.isNotEmpty) {
-      StorageUtils.storeToken(key: "userid", token: payload["sub"].toString());
-      StorageUtils.storeToken(
-          key: "username", token: payload["user"].toString());
+      StorageUtils.storeValue(key: "userid", value: payload["sub"].toString());
+      StorageUtils.storeValue(
+          key: "username", value: payload["user"].toString());
     }
     return token;
   }

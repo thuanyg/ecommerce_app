@@ -7,6 +7,7 @@ import 'package:ecommerce_app/features/product/presentation/blocs/product_catego
 import 'package:ecommerce_app/features/product/presentation/blocs/product_category/product_category_event.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product_category/product_category_state.dart';
 import 'package:ecommerce_app/features/product/presentation/components/product_card.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,7 +24,30 @@ class CategoryScreen extends StatefulWidget {
 
 class _CategoryScreenState extends State<CategoryScreen>
     with AutomaticKeepAliveClientMixin {
+  final _scrollController = ScrollController();
   String categorySelected = "";
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  void _onScroll() {
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+    if (maxScroll == currentScroll) {
+      BlocProvider.of<ProductCategoryBloc>(context).add(
+        LoadProductsByCategory(fetchLimit, categorySelected.toLowerCase()),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +69,7 @@ class _CategoryScreenState extends State<CategoryScreen>
         child: GridView.builder(
           itemCount: categories.length,
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+            crossAxisCount: kIsWeb ? 5 : 2,
             mainAxisSpacing: 16, // Adjusted for better spacing
             crossAxisSpacing: 16, // Added cross axis spacing
             childAspectRatio: 2.0, // Adjusted for square items
@@ -56,8 +80,12 @@ class _CategoryScreenState extends State<CategoryScreen>
               index: index,
               onTap: () {
                 categorySelected = categories[index].name;
+                BlocProvider.of<ProductCategoryBloc>(context).currentPage = 1;
                 BlocProvider.of<ProductCategoryBloc>(context).add(
-                  LoadProductsByCategory(30, categorySelected.toLowerCase()),
+                  LoadProductsByCategory(
+                    fetchLimit,
+                    categorySelected.toLowerCase(),
+                  ),
                 );
               },
             );
@@ -71,6 +99,7 @@ class _CategoryScreenState extends State<CategoryScreen>
           if (state is ProductCategoryInitial == false) {
             return buildProductByCategoryScreen(
               context: context,
+              scrollController: _scrollController,
               category: categorySelected,
             );
           } else {
@@ -88,6 +117,7 @@ class _CategoryScreenState extends State<CategoryScreen>
 Widget buildProductByCategoryScreen({
   required BuildContext context,
   required String category,
+  required ScrollController scrollController,
 }) {
   return Scaffold(
     appBar: AppBar(
@@ -155,10 +185,7 @@ Widget buildProductByCategoryScreen({
                 ),
                 Text(
                   "The products of $category is empty!",
-                  style: GoogleFonts.poppins(
-                    color: Colors.grey,
-                    fontSize: 16
-                  ),
+                  style: GoogleFonts.poppins(color: Colors.grey, fontSize: 16),
                 )
               ],
             ),
@@ -167,15 +194,26 @@ Widget buildProductByCategoryScreen({
 
         if (state is ProductCategoryLoaded) {
           return GridView.builder(
+            controller: scrollController,
             shrinkWrap: true,
-            itemCount: state.products.length,
+            itemCount: state.hasReachedMax || state.products.length < fetchLimit
+                ? state.products.length
+                : state.products.length + 1,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2, // Two items per row
+              crossAxisCount: kIsWeb ? 5 : 2, // Two items per row
               crossAxisSpacing: 2,
               mainAxisSpacing: 2,
-              childAspectRatio: 0.75,
+              childAspectRatio: kIsWeb ? 0.5 : 0.75,
             ),
             itemBuilder: (context, index) {
+              if (index >= state.products.length) {
+                return Center(
+                  child: Lottie.asset(
+                    "assets/animations/loading.json",
+                    width: 90,
+                  ),
+                );
+              }
               return ProductGridItem(
                 product: state.products[index],
                 onAddToCart: () {

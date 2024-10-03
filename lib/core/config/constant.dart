@@ -49,3 +49,4 @@ List<Color> colorsProduct = <Color>[
   const Color(0xff3E3D40),
 ];
 
+int fetchLimit = 20;

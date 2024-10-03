@@ -6,3 +6,9 @@ class LoadProducts extends ProductEvent {
   LoadProducts(this.limit);
 }
 
+class RefreshProducts extends ProductEvent {
+  final int limit;
+
+  RefreshProducts(this.limit);
+}
+

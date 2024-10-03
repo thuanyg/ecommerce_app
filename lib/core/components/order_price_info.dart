@@ -21,8 +21,8 @@ class OrderPriceInfo extends StatelessWidget {
           "Order Info",
           style: GoogleFonts.poppins(
             fontWeight: FontWeight.w600,
-            fontSize: size.width * 0.040,
-            color: Colors.teal
+            fontSize: 16,
+            color: Colors.teal,
           ),
         ),
         SizedBox(
@@ -82,9 +82,7 @@ class OrderPriceInfo extends StatelessWidget {
             Text(
               "Total",
               style: GoogleFonts.poppins(
-                fontWeight: FontWeight.w600,
-                color: Colors.teal
-              ),
+                  fontWeight: FontWeight.w600, color: Colors.teal),
             ),
             Text(
               "\$${priceCalculate.totalPrice.toStringAsFixed(2)}",

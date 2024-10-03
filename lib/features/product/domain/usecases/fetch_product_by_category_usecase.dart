@@ -6,7 +6,7 @@ class FetchProductsByCategory {
 
   FetchProductsByCategory(this.repository);
 
-  Future<List<ProductEntity>> call(String category, int limit) async {
-    return await repository.fetchProductsByCategory(category, limit);
+  Future<List<ProductEntity>> call(String category, int page, int limit) async {
+    return await repository.fetchProductsByCategory(category, page, limit);
   }
 }

@@ -93,7 +93,7 @@ class SplashPageState extends State<SplashPage> {
   }
 
   Future<void> fetchStartingData() async {
-    String? id = await StorageUtils.getToken(key: "userid");
+    String? id = await StorageUtils.getValue(key: "userid");
     if (id == null) {
       Navigator.pushNamed(context, LoginPage.routeName);
     } else {

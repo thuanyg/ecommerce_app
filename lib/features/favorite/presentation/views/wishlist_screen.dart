@@ -32,7 +32,7 @@ class _WishlistScreenState extends State<WishlistScreen> {
   }
 
   Future<void> _loadFavorites() async {
-    String userID = await StorageUtils.getToken(key: "userid") ?? "0";
+    String userID = await StorageUtils.getValue(key: "userid") ?? "0";
     BlocProvider.of<FavoriteBloc>(context).add(LoadFavorites(userID));
   }
 

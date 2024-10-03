@@ -13,24 +13,53 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final FetchProducts? fetchProducts;
   final FetchProductByID? fetchProductByID;
   List<ProductEntity> productsFavorite = [];
+  int currentPage = 1;
+  bool isLoadingMore = false;
 
   ProductBloc({this.fetchProducts, this.fetchProductByID})
       : super(ProductInitial()) {
     on<LoadProducts>(_onLoadProducts);
+    on<RefreshProducts>(_onRefreshProducts);
   }
 
-  Future<void> _onLoadProducts(
-      LoadProducts event, Emitter<ProductState> emit) async {
-    if (fetchProducts != null) {
-      emit(ProductLoading());
+  Future<void> _onLoadProducts(event, emit) async {
+    final currentState = state;
+    isLoadingMore = true;
+    if (!_hasReachedMax(currentState) && fetchProducts != null) {
       try {
-        final products = await fetchProducts!.call(event.limit);
-        emit(ProductLoaded(products));
+        if (currentState is ProductInitial) {
+          emit(ProductLoading());
+          final products = await fetchProducts!(currentPage, event.limit);
+
+          if (products.isEmpty) {
+            emit(ProductError("Products empty."));
+            return;
+          }
+
+          emit(ProductLoaded(
+            products: products,
+            hasReachedMax: false,
+          ));
+        } else if (currentState is ProductLoaded) {
+          currentPage++;
+          final products = await fetchProducts!(currentPage, event.limit);
+          emit(products.isEmpty
+              ? currentState.copyWith(hasReachedMax: true)
+              : ProductLoaded(
+                  products: currentState.products + products,
+                  hasReachedMax: false,
+                ));
+        }
+        isLoadingMore = false;
       } catch (e) {
+        isLoadingMore = false;
         emit(ProductError(e.toString()));
       }
     }
   }
+
+  bool _hasReachedMax(ProductState state) =>
+      state is ProductLoaded && state.hasReachedMax;
 
   Future<void> onLoadProductsFavorite(List<String> productIDs) async {
     productsFavorite.clear();
@@ -44,6 +73,27 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       }
     } on Exception catch (e) {
       throw Exception("An error occurred while loading favorite products: $e");
+    }
+  }
+
+  FutureOr<void> _onRefreshProducts(event, emit) async {
+    currentPage = 1;
+    try {
+      emit(ProductLoading());
+
+      final products = await fetchProducts!(currentPage, event.limit);
+
+      if (products.isEmpty) {
+        emit(ProductError("Products empty."));
+        return;
+      }
+
+      emit(ProductLoaded(
+        products: products,
+        hasReachedMax: false,
+      ));
+    } catch (e) {
+      emit(ProductError(e.toString()));
     }
   }
 }

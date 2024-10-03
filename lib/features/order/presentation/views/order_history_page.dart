@@ -23,7 +23,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
   }
 
   void fetchOrder() async {
-    String userid = await StorageUtils.getToken(key: "userid") ?? "0";
+    String userid = await StorageUtils.getValue(key: "userid") ?? "0";
     BlocProvider.of<OrderBloc>(context).add(LoadHistoryOrder(userid));
   }
 

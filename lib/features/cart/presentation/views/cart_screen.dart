@@ -48,7 +48,7 @@ class _CartScreenState extends State<CartScreen> {
         title: Text(
           "My Cart",
           style: GoogleFonts.poppins(
-            fontSize: size.width * 0.060,
+            fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -243,7 +243,7 @@ void paymentCheckoutAction({
 }) async {
   DialogUtils.showLoadingDialog(context);
 
-  String? id = await StorageUtils.getToken(key: "userid");
+  String? id = await StorageUtils.getValue(key: "userid");
 
   String name = nameController.text.trim();
   String address = addressController.text.trim();

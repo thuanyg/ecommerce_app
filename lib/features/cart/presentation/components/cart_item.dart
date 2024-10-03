@@ -56,7 +56,7 @@ class CartItemState extends State<CartItem> {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.poppins(
-                    fontSize: size.width * 0.043,
+                    fontSize: 16,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -67,7 +67,7 @@ class CartItemState extends State<CartItem> {
                   "\$${widget.cartItem.price}",
                   style: GoogleFonts.poppins(
                     color: Colors.black.withOpacity(0.8),
-                    fontSize: size.width * 0.04,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold
                   ),
                 ),

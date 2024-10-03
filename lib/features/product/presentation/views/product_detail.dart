@@ -288,7 +288,10 @@ class _ProductDetailState extends State<ProductDetail> {
                           width: MediaQuery.of(context).size.width / 2 - 24,
                           child: OutlinedButton(
                             onPressed: () {
-                              showBottomSheet(
+                              showModalBottomSheet(
+                                  backgroundColor: Colors.white,
+                                  isScrollControlled: true,
+                                  isDismissible: true,
                                   context: context,
                                   builder: (context) {
                                     return BottomSheetBuyNow(
@@ -509,7 +512,7 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   void favoriteProduct(ProductEntity product) async {
-    String userid = await StorageUtils.getToken(key: "userid") ?? "0";
+    String userid = await StorageUtils.getValue(key: "userid") ?? "0";
 
     Favorite favorite = Favorite(
       userID: userid,
@@ -525,7 +528,7 @@ class _ProductDetailState extends State<ProductDetail> {
   }
 
   void checkFavorite(String productID) async {
-    String id = await StorageUtils.getToken(key: "userid") ?? "0";
+    String id = await StorageUtils.getValue(key: "userid") ?? "0";
     BlocProvider.of<FavoriteBloc>(context).add(CheckFavorite(id, productID));
   }
 }
@@ -540,7 +543,7 @@ void paymentCheckoutBuyNowAction({
 }) async {
   DialogUtils.showLoadingDialog(context);
 
-  String? id = await StorageUtils.getToken(key: "userid");
+  String? id = await StorageUtils.getValue(key: "userid");
 
   String name = nameController.text.trim();
   String address = addressController.text.trim();

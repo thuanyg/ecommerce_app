@@ -81,7 +81,7 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
       LoadFavorites event, Emitter<FavoriteState> emit) async {
     emit(FavoritesFetchLoading());
     try {
-      String userID = await StorageUtils.getToken(key: "userid") ?? "0";
+      String userID = await StorageUtils.getValue(key: "userid") ?? "0";
       final favorites = await fetchFavorites(userID);
       if (favorites.isNotEmpty) {
         emit(FavoritesFetchLoaded(favorites));

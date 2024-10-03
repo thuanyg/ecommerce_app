@@ -1,23 +1,18 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:ecommerce_app/core/components/bottom_sheet_add_to_cart.dart';
 import 'package:ecommerce_app/core/components/product_item.dart';
 import 'package:ecommerce_app/core/components/slide_item.dart';
 import 'package:ecommerce_app/core/config/colors.dart';
 import 'package:ecommerce_app/core/config/constant.dart';
-import 'package:ecommerce_app/core/utils/dialog.dart';
 import 'package:ecommerce_app/core/utils/functions.dart';
 import 'package:ecommerce_app/core/utils/image_helper.dart';
-import 'package:ecommerce_app/features/cart/domain/entities/product.dart';
-import 'package:ecommerce_app/features/cart/presentation/blocs/cart_bloc.dart';
-import 'package:ecommerce_app/features/cart/presentation/blocs/cart_event.dart';
 import 'package:ecommerce_app/features/home/page_bloc.dart';
-import 'package:ecommerce_app/features/product/domain/entities/product.dart';
-import 'package:ecommerce_app/features/product/domain/usecases/fetch_products_usecase.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product/product_bloc.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product/product_event.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product/product_state.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product_category/product_category_bloc.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product_category/product_category_event.dart';
+import 'package:ecommerce_app/features/search/presentation/views/search_page.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
@@ -29,30 +24,65 @@ class MyHomeScreen extends StatefulWidget {
   static String routeName = "/HomePage";
 
   @override
-  State<MyHomeScreen> createState() => _MyHomeScreenState();
+  State<MyHomeScreen> createState() => MyHomeScreenState();
 }
 
-class _MyHomeScreenState extends State<MyHomeScreen>
+class MyHomeScreenState extends State<MyHomeScreen>
     with AutomaticKeepAliveClientMixin {
+
+
+  final _scrollController = ScrollController();
+
+  late ProductBloc _productBloc;
 
   @override
   void initState() {
     super.initState();
-    BlocProvider.of<ProductBloc>(context).add(LoadProducts(30));
+    _productBloc = BlocProvider.of<ProductBloc>(context);
+    _scrollController.addListener(_onScroll);
+    _productBloc.add(LoadProducts(fetchLimit)); // Tải trang đầu tiên
   }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void scrollToTop() {
+    _scrollController.animateTo(
+      0, // Vị trí cuộn
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _onScroll() {
+    // if(_productBloc.isLoadingMore) return;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.position.pixels;
+
+    if (maxScroll == currentScroll) {
+      _productBloc.add(
+        LoadProducts(fetchLimit),
+      );
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: buildAppBar(),
       body: RefreshIndicator(
         color: AppColors.enableColor,
         onRefresh: () async {
-          BlocProvider.of<ProductBloc>(context).add(LoadProducts(30));
+          _productBloc.add(RefreshProducts(fetchLimit));
         },
         child: SingleChildScrollView(
+          controller: _scrollController,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18),
             child: Column(
@@ -73,7 +103,7 @@ class _MyHomeScreenState extends State<MyHomeScreen>
                 buildTitleLabel(label: "Latest Products", onSeeAll: () {}),
                 BlocBuilder<ProductBloc, ProductState>(
                   builder: (context, state) {
-                    if (state is ProductLoading) {
+                    if (state is ProductLoading || state is ProductInitial) {
                       return Center(
                         child: Lottie.asset(
                           "assets/animations/loading.json",
@@ -87,7 +117,10 @@ class _MyHomeScreenState extends State<MyHomeScreen>
                       );
                     }
                     if (state is ProductLoaded) {
-                      return ProductGrid(products: state.products);
+                      return ProductGrid(
+                        state: state,
+                        scrollController: _scrollController,
+                      );
                     }
                     return const Center(
                       child: Text("Something went wrong."),
@@ -197,6 +230,7 @@ class _MyHomeScreenState extends State<MyHomeScreen>
   }
 
   AppBar buildAppBar() {
+    final size = MediaQuery.of(context).size;
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 0,
@@ -210,25 +244,35 @@ class _MyHomeScreenState extends State<MyHomeScreen>
             Expanded(
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Image.asset("assets/images/ic_logo_quickmart.png"),
+                child: Transform.scale(
+                  scale: kIsWeb ? 1.5 : 1,
+                  child: ImageHelper.loadAssetImage(
+                    "assets/images/ic_logo_quickmart.png",
+                  ),
+                ),
               ),
             ),
             IconButton(
+              style: const ButtonStyle(
+                shape: WidgetStatePropertyAll(CircleBorder()),
+              ),
               icon: const Icon(Icons.search_rounded, size: 28),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.pushNamed(context, SearchPage.routeName);
+              },
             ),
             const SizedBox(width: 6),
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
                 border: Border.all(color: AppColors.enableColor, width: 2),
+                shape: BoxShape.circle,
               ),
               child: ImageHelper.loadAssetImage(
                 "assets/images/ic_avatar.jpg",
                 radius: BorderRadius.circular(100),
-                height: 36,
-                width: 36,
-                fit: BoxFit.contain,
+                height: 40,
+                width: 40,
+                fit: BoxFit.cover,
               ),
             ),
           ],
@@ -266,11 +310,13 @@ Widget buildTitleLabel(
 bool get wantKeepAlive => true;
 
 class ProductGrid extends StatelessWidget {
-  final List<ProductEntity> products;
+  final ScrollController scrollController;
+  final ProductLoaded state;
 
   const ProductGrid({
     super.key,
-    required this.products,
+    required this.scrollController,
+    required this.state,
   });
 
   @override
@@ -278,21 +324,26 @@ class ProductGrid extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: products.length,
+      itemCount: state.products.length,
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2, // Two items per row
+        crossAxisCount: kIsWeb ? 6 : 2,
         crossAxisSpacing: 3,
         mainAxisSpacing: 3,
         childAspectRatio: 0.75,
       ),
       itemBuilder: (context, index) {
+        if (index >= state.products.length) {
+          return Container();
+        }
         return ProductGridItem(
-          product: products[index],
+          product: state.products[index],
           onAddToCart: () {
-            showBottomSheetAddToCart(context, products[index]);
+            showBottomSheetAddToCart(context, state.products[index]);
           },
         );
       },
     );
   }
 }
+
+

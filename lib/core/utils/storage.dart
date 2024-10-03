@@ -1,3 +1,5 @@
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class StorageUtils {
@@ -8,16 +10,25 @@ class StorageUtils {
   StorageUtils._privateConstructor();
 
   // Method to store a token (Static)
-  static Future<void> storeToken({required String key, required String token}) async {
-    await _storage.write(key: key, value: token);
+  static Future<void> storeValue(
+      {required String key, required String value}) async {
+    if (!kIsWeb) {
+      return await _storage.write(key: key, value: value);
+    } else {
+      // html.window.localStorage[key] = value;
+    }
   }
 
   // Method to retrieve a token (Static)
-  static Future<String?> getToken({required String key}) async {
+  static Future<String?> getValue({required String key}) async {
     return await _storage.read(key: key);
   }
 
   static Future<void> remove({required String key}) async {
-    return await _storage.delete(key: key);
+    if (!kIsWeb) {
+      return await _storage.delete(key: key);
+    } else {
+      // html.window.localStorage.remove(key);
+    }
   }
 }

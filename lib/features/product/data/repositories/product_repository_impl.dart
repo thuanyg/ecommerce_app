@@ -18,11 +18,11 @@ class ProductRepositoryImpl extends ProductRepository {
   }
 
   @override
-  Future<List<ProductEntity>> fetchProducts(int limit) async {
+  Future<List<ProductEntity>> fetchProducts(int page, int limit) async {
     try {
       // Fetch dữ liệu từ data source (trả về danh sách ProductModel)
       final List<ProductModel> productModels =
-          await dataSource.fetchProducts(limit);
+          await dataSource.fetchProducts(page, limit);
 
       // Ánh xạ danh sách ProductModel thành danh sách ProductEntity
       final List<ProductEntity> products =
@@ -42,10 +42,10 @@ class ProductRepositoryImpl extends ProductRepository {
 
   @override
   Future<List<ProductEntity>> fetchProductsByCategory(
-      String category, int limit) async {
+      String category, int page, int limit) async {
     try {
       final productModels =
-          await dataSource.fetchProductsByCategory(category, limit);
+          await dataSource.fetchProductsByCategory(category, page, limit);
 
       final List<ProductEntity> products =
           productModels.map((model) => model.toEntity()).toList();

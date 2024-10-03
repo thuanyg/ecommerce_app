@@ -7,25 +7,56 @@ class ProductCategoryBloc
     extends Bloc<ProductCategoryEvent, ProductCategoryState> {
   final FetchProductsByCategory? fetchProductsByCategory;
 
+  int currentPage = 1;
+
   ProductCategoryBloc(this.fetchProductsByCategory)
       : super(ProductCategoryInitial()) {
     on<LoadProductsByCategory>(_onLoadProductsByCategory);
     on<ResetProductCategory>((event, emit) => emit(ProductCategoryInitial()));
   }
 
-  Future<void> _onLoadProductsByCategory(
-      LoadProductsByCategory event, emit) async {
-    if (fetchProductsByCategory != null) {
-      emit(ProductCategoryLoading());
+  Future<void> _onLoadProductsByCategory(event, emit) async {
+    final currentState = state;
+
+    if (!_hasReachedMax(currentState) && fetchProductsByCategory != null) {
       try {
-        final products =
-            await fetchProductsByCategory!.call(event.category, event.limit);
-        products.isNotEmpty
-            ? emit(ProductCategoryLoaded(products))
-            : emit(ProductCategoryError("Product empty."));
+        if (currentState is ProductCategoryInitial) {
+          emit(ProductCategoryLoading());
+
+          final products = await fetchProductsByCategory!
+              .call(event.category, currentPage, event.limit);
+
+          if (products.isEmpty) {
+            emit(ProductCategoryError("Products empty."));
+            return;
+          }
+
+          emit(
+            ProductCategoryLoaded(
+              products: products,
+              hasReachedMax: false,
+            ),
+          );
+        } else if (currentState is ProductCategoryLoaded) {
+          currentPage++;
+          final products = await fetchProductsByCategory!
+              .call(event.category, currentPage, event.limit);
+
+          emit(
+            products.isEmpty
+                ? currentState.copyWith(hasReachedMax: true)
+                : ProductCategoryLoaded(
+                    products: currentState.products + products,
+                    hasReachedMax: false,
+                  ),
+          );
+        }
       } catch (e) {
         emit(ProductCategoryError(e.toString()));
       }
     }
   }
+
+  bool _hasReachedMax(ProductCategoryState state) =>
+      state is ProductCategoryLoaded && state.hasReachedMax;
 }

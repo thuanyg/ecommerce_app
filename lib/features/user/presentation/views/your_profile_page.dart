@@ -14,7 +14,7 @@ class YourProfilePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Future.microtask(() async {
-      String id = await StorageUtils.getToken(key: "userid") ?? "";
+      String id = await StorageUtils.getValue(key: "userid") ?? "";
 
       // Now trigger the BLoC event
       BlocProvider.of<PersonalBloc>(context).add(PersonalLoadInformation(id));
