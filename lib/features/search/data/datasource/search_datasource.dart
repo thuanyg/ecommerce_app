@@ -6,4 +6,5 @@ abstract class SearchDatasource {
   Future<void> saveHistorySearch(String query);
   Future<List<SearchHistory>?> getHistorySearch();
   Future<void> removeHistorySearch(String query);
+  Future<void> removeAllHistorySearch();
 }

@@ -12,3 +12,6 @@ class RemoveHistorySearch extends HistoryEvent {
 
   RemoveHistorySearch(this.query);
 }
+
+class RemoveAllHistorySearch extends HistoryEvent {
+}

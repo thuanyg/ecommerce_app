@@ -12,6 +12,7 @@ import 'package:ecommerce_app/features/product/presentation/blocs/product/produc
 import 'package:ecommerce_app/features/product/presentation/blocs/product_category/product_category_bloc.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product_category/product_category_event.dart';
 import 'package:ecommerce_app/features/search/presentation/views/search_page.dart';
+import 'package:ecommerce_app/features/user/presentation/views/your_profile_page.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,7 +41,7 @@ class MyHomeScreenState extends State<MyHomeScreen>
     super.initState();
     _productBloc = BlocProvider.of<ProductBloc>(context);
     _scrollController.addListener(_onScroll);
-    _productBloc.add(LoadProducts(fetchLimit)); // Tải trang đầu tiên
+    _productBloc.add(LoadProducts(fetchLimit));
   }
 
   @override
@@ -262,17 +263,23 @@ class MyHomeScreenState extends State<MyHomeScreen>
               },
             ),
             const SizedBox(width: 6),
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: AppColors.enableColor, width: 2),
-                shape: BoxShape.circle,
-              ),
-              child: ImageHelper.loadAssetImage(
-                "assets/images/ic_avatar.jpg",
-                radius: BorderRadius.circular(100),
-                height: 40,
-                width: 40,
-                fit: BoxFit.cover,
+            InkWell(
+              onTap: () {
+                Navigator.pushNamed(context, YourProfilePage.routeName);
+              },
+              borderRadius: BorderRadius.circular(50),
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(color: AppColors.enableColor, width: 2),
+                  shape: BoxShape.circle,
+                ),
+                child: ImageHelper.loadAssetImage(
+                  "assets/images/ic_avatar.jpg",
+                  radius: BorderRadius.circular(100),
+                  height: 40,
+                  width: 40,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ],
@@ -312,7 +319,6 @@ bool get wantKeepAlive => true;
 class ProductGrid extends StatelessWidget {
   final ScrollController scrollController;
   final ProductLoaded state;
-
   const ProductGrid({
     super.key,
     required this.scrollController,
@@ -321,12 +327,13 @@ class ProductGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    Orientation orientation = MediaQuery.of(context).orientation;
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: state.products.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: kIsWeb ? 6 : 2,
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: orientation == Orientation.landscape ? 6 : 2,
         crossAxisSpacing: 3,
         mainAxisSpacing: 3,
         childAspectRatio: 0.75,

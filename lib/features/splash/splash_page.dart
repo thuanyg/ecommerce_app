@@ -27,8 +27,15 @@ class SplashPageState extends State<SplashPage> {
 
   @override
   Widget build(BuildContext context) {
-
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    // Tùy chỉnh kiểu dáng của thanh trạng thái
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: Colors.teal,
+      ),
+    );
 
     return Scaffold(
       backgroundColor: Colors.teal,
@@ -39,7 +46,8 @@ class SplashPageState extends State<SplashPage> {
           } else if (state is PersonalError) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
-                  content: Text("Something went wrong. Please try again!"),),
+                content: Text("Something went wrong. Please try again!"),
+              ),
             );
           }
         },
@@ -78,7 +86,7 @@ class SplashPageState extends State<SplashPage> {
                   text: TextSpan(
                     text: "Version v1.0.0",
                     style: TextStyle(
-                      color: Colors.black87,
+                      color: Colors.white,
                       fontFamily: "Poppins-Light",
                       fontSize: MediaQuery.of(context).size.height * 0.016,
                     ),

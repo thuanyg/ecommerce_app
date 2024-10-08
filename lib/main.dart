@@ -47,6 +47,7 @@ import 'package:ecommerce_app/features/user/domain/usecase/get_user.dart';
 import 'package:ecommerce_app/features/user/domain/usecase/login_usecase.dart';
 import 'package:ecommerce_app/features/user/domain/usecase/logout.dart';
 import 'package:ecommerce_app/features/user/domain/usecase/signup_usecase.dart';
+import 'package:ecommerce_app/features/user/domain/usecase/update_usecase.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/login/login_bloc.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/logout/logout_bloc.dart';
 import 'package:ecommerce_app/features/user/presentation/blocs/personal/personal_bloc.dart';
@@ -90,6 +91,7 @@ void main() async {
   final userLogout = LogOutUseCase(userRepository);
   final userSignUp = SignUpUseCase(userRepository);
   final getUser = GetUserUseCase(userRepository);
+  final updateUser = UpdateUsecase(userRepository);
 
   // order
   final orderDataSource = OrderDatasourceImpl(dio: dio);
@@ -111,68 +113,70 @@ void main() async {
   final searchProduct = SearchProductUseCase(searchRepository);
   final historySearch = HistorySearchUseCase(searchRepository);
 
-  runApp(MultiBlocProvider(
-    providers: [
-      BlocProvider<ProductBloc>(
-        create: (context) => ProductBloc(
-          fetchProducts: fetchProducts,
-          fetchProductByID: fetchProductByID,
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<ProductBloc>(
+          create: (context) => ProductBloc(
+            fetchProducts: fetchProducts,
+            fetchProductByID: fetchProductByID,
+          ),
         ),
-      ),
-      BlocProvider<ProductCategoryBloc>(
-        create: (context) => ProductCategoryBloc(fetchProductsByCategory),
-      ),
-      BlocProvider(
-        create: (context) => DetailBloc(
-          fetchProductByID: fetchProductByID,
+        BlocProvider<ProductCategoryBloc>(
+          create: (context) => ProductCategoryBloc(fetchProductsByCategory),
         ),
-      ),
-      BlocProvider(
-        create: (context) => CartBloc(
-          addProductToCart: addProductToCart,
-          getCartUseCase: getCart,
-          quantityControlUseCase: quantityControl,
-          removeControlUseCase: removeControl,
+        BlocProvider(
+          create: (context) => DetailBloc(
+            fetchProductByID: fetchProductByID,
+          ),
         ),
-      ),
-      BlocProvider(
-        create: (context) => LoginBloc(loginUseCase: userLogin),
-      ),
-      BlocProvider(
-        create: (context) => LogoutBloc(logOutUseCase: userLogout),
-      ),
-      BlocProvider(
-        create: (context) => SignupBloc(signUpUseCase: userSignUp),
-      ),
-      BlocProvider(
-        create: (context) => PersonalBloc(getUser),
-      ),
-      BlocProvider(
-        create: (context) => OrderBloc(createOrder, historyOrder),
-      ),
-      BlocProvider(
-        create: (context) => PageBloc(),
-      ),
-      BlocProvider(
-        create: (context) => FavoriteBloc(
-          createFavorite,
-          removeFavorite,
-          checkFavorite,
-          getFavorites,
+        BlocProvider(
+          create: (context) => CartBloc(
+            addProductToCart: addProductToCart,
+            getCartUseCase: getCart,
+            quantityControlUseCase: quantityControl,
+            removeControlUseCase: removeControl,
+          ),
         ),
-      ),
-      BlocProvider(
-        create: (context) => SearchBloc(searchProduct),
-      ),
-      BlocProvider(
-        create: (context) => HistoryBloc(historySearch),
-      ),
-      BlocProvider(
-        create: (context) => ThemeBloc(),
-      ),
-    ],
-    child: const MyApp(),
-  ));
+        BlocProvider(
+          create: (context) => LoginBloc(loginUseCase: userLogin),
+        ),
+        BlocProvider(
+          create: (context) => LogoutBloc(logOutUseCase: userLogout),
+        ),
+        BlocProvider(
+          create: (context) => SignupBloc(signUpUseCase: userSignUp),
+        ),
+        BlocProvider(
+          create: (context) => PersonalBloc(getUser, updateUser),
+        ),
+        BlocProvider(
+          create: (context) => OrderBloc(createOrder, historyOrder),
+        ),
+        BlocProvider(
+          create: (context) => PageBloc(),
+        ),
+        BlocProvider(
+          create: (context) => FavoriteBloc(
+            createFavorite,
+            removeFavorite,
+            checkFavorite,
+            getFavorites,
+          ),
+        ),
+        BlocProvider(
+          create: (context) => SearchBloc(searchProduct),
+        ),
+        BlocProvider(
+          create: (context) => HistoryBloc(historySearch),
+        ),
+        BlocProvider(
+          create: (context) => ThemeBloc(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -182,8 +186,6 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
         overlays: [SystemUiOverlay.top]);
-
-    // Tùy chỉnh kiểu dáng của thanh trạng thái
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -192,7 +194,6 @@ class MyApp extends StatelessWidget {
     );
     return BlocBuilder<ThemeBloc, ThemeState>(
       builder: (context, state) {
-        print(state.themeData);
         return MaterialApp(
           title: 'Ecommerce Application',
           theme: state.themeData,

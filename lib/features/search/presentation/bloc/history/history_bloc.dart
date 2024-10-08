@@ -15,6 +15,7 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     on<GetHistorySearch>(_getHistorySearch);
     on<SaveHistorySearch>(_saveHistorySearch);
     on<RemoveHistorySearch>(_removeHistorySearch);
+    on<RemoveAllHistorySearch>(_removeAll);
   }
 
   FutureOr<void> _getHistorySearch(
@@ -23,7 +24,8 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
       emit(HistoryLoading());
       final list = await historySearchUseCase.get();
       if (list != null && list.isNotEmpty) {
-        list.sort((a, b) => b.date.compareTo(a.date)); // Sort by date descending
+        list.sort(
+            (a, b) => b.date.compareTo(a.date)); // Sort by date descending
         emit(HistoryLoaded(list: list));
       } else {
         emit(HistoryEmpty());
@@ -48,7 +50,8 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
       await historySearchUseCase.remove(event.query);
       final list = await historySearchUseCase.get();
       if (list != null && list.isNotEmpty) {
-        list.sort((a, b) => b.date.compareTo(a.date)); // Sort by date descending
+        list.sort(
+            (a, b) => b.date.compareTo(a.date)); // Sort by date descending
         emit(HistoryLoaded(list: list));
       } else {
         emit(HistoryEmpty());
@@ -58,4 +61,13 @@ class HistoryBloc extends Bloc<HistoryEvent, HistoryState> {
     }
   }
 
+  FutureOr<void> _removeAll(event, emit) async {
+    try {
+      await historySearchUseCase.removeAll();
+      emit(HistoryLoaded(list: []));
+      emit(HistoryEmpty());
+    } on Exception catch (e) {
+      throw e.toString();
+    }
+  }
 }

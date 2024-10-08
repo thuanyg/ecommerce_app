@@ -3,7 +3,6 @@ import 'package:ecommerce_app/core/config/constant.dart';
 import 'package:ecommerce_app/features/cart/presentation/views/cart_screen.dart';
 import 'package:ecommerce_app/features/category/category_screen.dart';
 import 'package:ecommerce_app/features/home/page_bloc.dart';
-import 'package:ecommerce_app/features/order/presentation/views/order_history_page.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product_category/product_category_bloc.dart';
 import 'package:ecommerce_app/features/product/presentation/blocs/product_category/product_category_event.dart';
 import 'package:ecommerce_app/features/product/presentation/views/home_page.dart';
@@ -61,7 +60,6 @@ class HomePage extends StatelessWidget {
                   switch (index) {
                     case 0:
                       homeScreenKey.currentState?.scrollToTop();
-                      print(homeScreenKey.currentState);
                     case 1:
                       BlocProvider.of<ProductCategoryBloc>(context).add(
                         ResetProductCategory(),

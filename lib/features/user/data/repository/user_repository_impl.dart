@@ -35,4 +35,9 @@ class UserRepositoryImpl extends UserRepository {
   Future<void> logout() async {
     return await userDatasourceImpl.logout();
   }
+
+  @override
+  Future<User> update(User user) async {
+    return await userDatasourceImpl.update(user);
+  }
 }

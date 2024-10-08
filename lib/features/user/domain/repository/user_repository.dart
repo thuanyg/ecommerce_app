@@ -8,4 +8,6 @@ abstract class UserRepository {
   Future<User> getUser(String id);
 
   Future<void> logout();
+
+  Future<User> update(User user);
 }

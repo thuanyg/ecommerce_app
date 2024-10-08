@@ -18,4 +18,8 @@ class HistorySearchUseCase {
   Future<void> remove(String query) async {
     return await searchRepository.removeHistorySearch(query);
   }
+
+  Future<void> removeAll() async {
+    return await searchRepository.removeAllHistorySearch();
+  }
 }

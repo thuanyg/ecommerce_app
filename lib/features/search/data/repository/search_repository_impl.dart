@@ -39,4 +39,9 @@ class SearchRepositoryImpl extends SearchRepository {
     return await searchDatasource.saveHistorySearch(query);
   }
 
+  @override
+  Future<void> removeAllHistorySearch() async {
+    return await searchDatasource.removeAllHistorySearch();
+  }
+
 }

@@ -12,8 +12,6 @@ class SearchDatasourceImpl extends SearchDatasource {
 
   SearchDatasourceImpl(this.dio, [this.searchBox]);
 
-
-
   @override
   Future<List<ProductModel>> searchProduct(
       String query, int page, int limit) async {
@@ -60,5 +58,10 @@ class SearchDatasourceImpl extends SearchDatasource {
   @override
   Future<void> removeHistorySearch(String query) async {
     return await searchBox?.delete(query);
+  }
+
+  @override
+  Future<void> removeAllHistorySearch() async {
+    await searchBox?.clear();
   }
 }

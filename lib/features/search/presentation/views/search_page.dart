@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:ecommerce_app/core/components/bottom_sheet_add_to_cart.dart';
 import 'package:ecommerce_app/core/components/product_item.dart';
@@ -28,6 +30,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final _searchController = TextEditingController();
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -76,12 +79,21 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
                 child: TextField(
-                  onChanged: (value) async {
-                    await Future.delayed(const Duration(milliseconds: 1800));
-                    context.read<SearchBloc>().add(ResetSearchProduct());
-                    context
-                        .read<SearchBloc>()
-                        .add(SearchProduct(value.trim(), fetchLimit));
+                  onChanged: (value) {
+                    if (_debounce?.isActive ?? false) {
+                      _debounce!.cancel();
+                    }
+
+                    if (value == "") {
+                      context.read<SearchBloc>().add(ResetSearchProduct());
+                    } else {
+                      _debounce = Timer(const Duration(milliseconds: 1500), () {
+                        context.read<SearchBloc>().add(ResetSearchProduct());
+                        context
+                            .read<SearchBloc>()
+                            .add(SearchProduct(value.trim(), fetchLimit));
+                      });
+                    }
                   },
                   onSubmitted: (value) {
                     if (value.trim() != "") {
@@ -96,6 +108,7 @@ class _SearchPageState extends State<SearchPage> {
                   },
                   style: const TextStyle(height: 1),
                   controller: _searchController,
+                  autofocus: true,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(borderSide: BorderSide.none),
                     hintText: "Search",
@@ -131,75 +144,81 @@ class _SearchPageState extends State<SearchPage> {
               child: Text("No results"),
             );
           }
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text("Last search"),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        "Clear all",
-                        style: TextStyle(color: Colors.red),
+          if (state is SearchInitial) {
+            return Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text("Last search"),
+                      TextButton(
+                        onPressed: () {
+                          BlocProvider.of<HistoryBloc>(context)
+                              .add(RemoveAllHistorySearch());
+                        },
+                        child: const Text(
+                          "Clear all",
+                          style: TextStyle(color: Colors.red, fontSize: 14),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-                Expanded(
-                  child: BlocBuilder<HistoryBloc, HistoryState>(
-                    builder: (context, state) {
-                      if (state is HistoryLoaded) {
-                        return ListView.builder(
-                          itemCount: state.list.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              leading: const Icon(Icons.history),
-                              title: Text(state.list[index].query),
-                              onTap: () {
-                                context
-                                    .read<SearchBloc>()
-                                    .add(ResetSearchProduct());
-
-                                context.read<SearchBloc>().add(
-                                      SearchProduct(
-                                          state.list[index].query, fetchLimit),
-                                    );
-
-                                _searchController.text =
-                                    state.list[index].query;
-                              },
-                              trailing: InkWell(
-                                borderRadius: BorderRadius.circular(200),
-                                onTap: () {
-                                  context.read<HistoryBloc>().add(
-                                        RemoveHistorySearch(
-                                            state.list[index].query),
-                                      );
-                                },
-                                child: const Padding(
-                                  padding: EdgeInsets.all(6),
-                                  child: Text("X"),
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      }
-                      if (state is HistoryEmpty) {
-                        return const Center(
-                          child: Text("Search anything..."),
-                        );
-                      }
-                      return const Text("....");
-                    },
+                    ],
                   ),
-                ),
-              ],
-            ),
-          );
+                  Expanded(
+                    child: BlocBuilder<HistoryBloc, HistoryState>(
+                      builder: (context, state) {
+                        if (state is HistoryLoaded) {
+                          return ListView.builder(
+                            itemCount: state.list.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                leading: const Icon(Icons.history),
+                                title: Text(state.list[index].query),
+                                onTap: () {
+                                  context
+                                      .read<SearchBloc>()
+                                      .add(ResetSearchProduct());
+
+                                  context.read<SearchBloc>().add(
+                                        SearchProduct(state.list[index].query,
+                                            fetchLimit),
+                                      );
+
+                                  _searchController.text =
+                                      state.list[index].query;
+                                },
+                                trailing: InkWell(
+                                  borderRadius: BorderRadius.circular(200),
+                                  onTap: () {
+                                    context.read<HistoryBloc>().add(
+                                          RemoveHistorySearch(
+                                              state.list[index].query),
+                                        );
+                                  },
+                                  child: const Padding(
+                                    padding: EdgeInsets.all(6),
+                                    child: Text("X"),
+                                  ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                        if (state is HistoryEmpty) {
+                          return const Center(
+                            child: Text("Search anything..."),
+                          );
+                        }
+                        return const Text("....");
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          }
+          return Container();
         },
       ),
     );

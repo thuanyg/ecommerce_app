@@ -79,4 +79,27 @@ class UserDatasourceImpl extends UserDatasource {
     StorageUtils.remove(key: "userid");
     Hive.box<CartProductModel>('cartBox').clear();
   }
+
+  @override
+  Future<User> update(User newUser) async {
+    try {
+      Response response = await dio.put(
+        "$baseUrl/users/${newUser.id}",
+        data: newUser.toJson(),
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        final data = response.data;
+        return User.fromJson(data);
+      } else {
+        throw Exception(
+            response.data.toString());
+      }
+    } on DioError catch (dioError) {
+      throw Exception("Dio error: ${dioError.message}");
+    } catch (e) {
+      // General exception handling
+      throw Exception("An error occurred: $e");
+    }
+  }
 }

@@ -6,4 +6,5 @@ abstract class UserDatasource {
   Future<User> signUp(User user);
   Future<User> getUser(String id);
   Future<void> logout();
+  Future<User> update(User newUser);
 }
